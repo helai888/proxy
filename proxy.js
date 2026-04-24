@@ -132,6 +132,127 @@ const CSS_COMMON = `
     }
 `;
 
+const CSS_DASHBOARD_THEME = `
+    body {
+        background: radial-gradient(circle at 95% 8%, rgba(255, 80, 180, 0.32), transparent 26%),
+                    radial-gradient(circle at 10% 85%, rgba(120, 96, 255, 0.18), transparent 30%),
+                    #eff1ff;
+        color: #303759;
+    }
+    body.dark {
+        background: radial-gradient(circle at 95% 8%, rgba(255, 80, 180, 0.25), transparent 26%),
+                    radial-gradient(circle at 10% 85%, rgba(120, 96, 255, 0.18), transparent 30%),
+                    #111425;
+    }
+    .container {
+        max-width: 1500px;
+        background: rgba(247, 248, 255, 0.8);
+        border: 1px solid rgba(255,255,255,0.75);
+        border-radius: 28px;
+        padding: 20px;
+        box-shadow: 0 18px 55px rgba(52, 58, 112, 0.12);
+    }
+    .dashboard-shell { display: grid; grid-template-columns: 220px 1fr; gap: 16px; min-height: 88vh; transition: 0.25s ease; }
+    .dashboard-shell.sidebar-collapsed { grid-template-columns: 1fr; }
+    .dashboard-shell.sidebar-collapsed .side-panel { display: none; }
+    .side-panel {
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 24px;
+        padding: 26px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .brand {
+        font-size: 30px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #6f5cff, #f55bb7);
+        -webkit-background-clip: text;
+        color: transparent;
+        margin: 0;
+        font-family: "Segoe Script", "Brush Script MT", "Snell Roundhand", cursive;
+        letter-spacing: 1px;
+    }
+    .side-nav a {
+        display: block;
+        text-decoration: none;
+        color: var(--text-sec);
+        font-weight: 600;
+        padding: 12px 14px;
+        border-radius: 12px;
+        margin-bottom: 6px;
+    }
+    .side-nav a.active {
+        color: #fff;
+        background: linear-gradient(90deg, #6b58ff, #f05ab9);
+        box-shadow: 0 8px 18px rgba(107,88,255,.24);
+    }
+    .main-panel {
+        min-width: 0;
+        background: linear-gradient(180deg, rgba(249,250,255,0.88), rgba(243,245,255,0.95));
+        border-radius: 24px;
+        padding: 14px;
+        border: 1px solid rgba(190, 195, 226, .45);
+    }
+    .hero-card {
+        background: rgba(255,255,255,0.88);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 20px;
+        padding: 18px 20px;
+        margin-bottom: 18px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .hero-chip {
+        background: #eef0ff;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        color: #5f6385;
+        border: 1px solid #e0e3fa;
+    }
+    .menu-toggle {
+        border: 1px solid #dfe3fb;
+        background: #fff;
+        color: #575d88;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 10px 14px;
+    }
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+    .soft-panel {
+        background: rgba(244, 246, 255, 0.95) !important;
+        border: 1px solid rgba(200, 205, 233, 0.52) !important;
+    }
+    .card {
+        background: rgba(255,255,255,0.94);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(67, 74, 131, 0.08);
+    }
+    .btn-submit {
+        background: linear-gradient(90deg, #7057ff, #ef5bb8) !important;
+        box-shadow: 0 7px 20px rgba(113, 87, 255, .25) !important;
+        border-radius: 12px;
+    }
+    .btn-submit:hover { filter: brightness(1.03); transform: translateY(-1px); }
+    #nodeModal { position: fixed; inset: 0; background: rgba(15, 17, 35, 0.45); z-index: 12000; display: none; padding: 18px; overflow-y: auto; }
+    #nodeModal .modal-card { max-width: 980px; margin: 10px auto; }
+    @media (max-width: 1100px) {
+        .dashboard-shell { grid-template-columns: 92px 1fr; gap: 10px; }
+        .side-panel { padding: 12px 10px; }
+        .side-nav a { padding: 10px 8px; font-size: 12px; text-align: center; }
+        .brand { font-size: 22px; text-align: center; }
+    }
+`;
+
 const LOGIN_UI = `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -179,8 +300,8 @@ const HTML_UI = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MakkaPakka的反代面板</title>
-    <style>${CSS_COMMON}</style>
+    <title>难遇我</title>
+    <style>${CSS_COMMON}${CSS_DASHBOARD_THEME}</style>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -222,7 +343,31 @@ const HTML_UI = `
     </div>
 
     <div class="container">
-    <div id="updateAlert" class="card" style="display: none; border-left: 4px solid #34c759; background-color: rgba(52, 199, 89, 0.05); margin-top: 20px;">
+    <div class="dashboard-shell" id="dashboardShell">
+        <aside class="side-panel">
+            <h2 class="brand">难遇我</h2>
+            <nav class="side-nav">
+                <a class="active" href="javascript:void(0)" data-page-nav="home" onclick="switchPage('home', this)">代理主页</a>
+                <a href="javascript:void(0)" data-page-nav="nodes" onclick="switchPage('nodes', this)">代理节点</a>
+                <a href="javascript:void(0)" data-page-nav="ip" onclick="switchPage('ip', this)">优选 IP</a>
+                <a href="javascript:void(0)" data-page-nav="update" onclick="switchPage('update', this)">版本更新</a>
+            </nav>
+            <div style="margin-top:auto; color:var(--text-sec); font-size:12px; line-height:1.6;">
+                <div>Settings</div>
+                <div>Log Out</div>
+            </div>
+        </aside>
+        <main class="main-panel">
+            <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰ 菜单</button>
+            </div>
+            <div class="hero-card page-section active" data-page="home">
+                <div>
+                    <div style="font-size:38px; font-weight:800; margin-bottom:4px; font-family: 'Trebuchet MS', 'Avenir Next', sans-serif; letter-spacing: 1px;">难遇我</div>
+                    <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 3px;">NanYuWo</div>
+                </div>
+            </div>
+    <div id="updateAlert" class="card page-section" data-page="update" style="display: none; border-left: 4px solid #34c759; background-color: rgba(52, 199, 89, 0.05); margin-top: 20px;">
             <div style="display:flex; justify-content: space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                 <div>
                     <h3 style="margin:0; color: #34c759; font-size: 16px;">✨ 发现新版本！</h3>
@@ -231,7 +376,7 @@ const HTML_UI = `
                 <button onclick="doOnlineUpdate()" id="onlineUpdateBtn" style="background: #34c759; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 12px rgba(52, 199, 89, 0.2);">🚀 一键拉取并升级</button>
             </div>
         </div>
-    <div id="cf-trace-card" style="background: rgba(120,120,120,0.05); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; font-size: 14px; gap: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); margin-top: 20px;">
+    <div id="cf-trace-card" class="soft-panel page-section" data-page="ip" style="padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; font-size: 14px; gap: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); margin-top: 20px;">
             <div style="display: flex; align-items: center; gap: 12px;">
                 <div style="font-size: 24px;">📍</div>
                 <div>
@@ -246,7 +391,7 @@ const HTML_UI = `
                     <div id="trace-egress" style="font-weight:600; color:#34c759; font-family: monospace; font-size: 15px;">雷达扫描中...</div>
                 </div>
             </div>
-        </div><div style="background: rgba(120,120,120,0.05); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; margin-top: 20px;">
+        </div><div class="soft-panel page-section" data-page="ip" style="padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; margin-top: 20px;">
             <div style="font-weight: 600; margin-bottom: 12px; font-size: 16px;">⚙️ Worker 调度模式与区域设置</div>
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 
@@ -266,14 +411,14 @@ const HTML_UI = `
 
                 <input type="text" id="cf-custom-input" placeholder="输入云代码 (如 gcp:us-west1)" style="display: none; flex: 1.5; min-width: 200px; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">
                 
-                <button onclick="updatePlacement()" style="background: #007aff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                <button class="btn-submit" onclick="updatePlacement()" style="padding: 10px 20px; border-radius: 6px; font-weight: bold; white-space: nowrap;">
                     提交修改
                 </button>
             </div>
             <div id="place-status" style="margin-top: 10px; font-size: 13px; color: var(--text-sec); font-weight: 600;">后台全自动安全调度，不暴露任何私钥</div>
         </div>
         <div class="content-wrap">
-            <div class="header" style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap:wrap; gap:16px;">
+            <div class="header page-section" data-page="update" style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap:wrap; gap:16px;">
                 <h1 style="margin: 0; font-size: 26px; display:flex; align-items:center; gap: 10px;">
                     私有调度与反代核心
                     <button id="themeToggle" onclick="toggleDarkMode()" style="background:transparent;border:none;font-size:24px;cursor:pointer;padding:0;" title="切换深色模式">🌙</button>
@@ -289,7 +434,7 @@ const HTML_UI = `
                 </div>
             </div>
 
-            <div class="card" style="border-left: 4px solid #ff3b30;">
+            <div class="card page-section" data-page="update" style="border-left: 4px solid #ff3b30;">
     <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
         <h2 style="margin:0; font-size:18px; color: #ff3b30;">🚀 一键覆盖/更新 Worker 核心层代码</h2>
     </div>
@@ -301,7 +446,7 @@ const HTML_UI = `
         <button class="btn-submit" id="deployBtn" onclick="deployWorker()" style="background: #ff3b30; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2); margin-left: auto;">🔥 立即覆盖部署并重启节点</button>
     </div>
 </div>
-            <div class="card">
+            <div class="card page-section" data-page="ip">
                 <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
                     <h2 style="margin:0; font-size:18px;">⚡ 专属线路测速与动态 DNS 解析</h2>
                 </div>
@@ -369,7 +514,9 @@ const HTML_UI = `
                 </div>
             </div>
             
-            <div class="card">
+            <div id="nodeModal">
+                <div class="card modal-card" style="position: relative;">
+                    <button onclick="closeNodeModal()" style="position:absolute; right:18px; top:14px; border:none; background:transparent; color:var(--text-sec); font-size:24px; cursor:pointer;">×</button>
                 <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
                     <h2 style="margin:0; font-size:18px;">部署 / 编辑反代节点</h2>
                     <div>
@@ -427,15 +574,17 @@ const HTML_UI = `
                         </div>
                     </div>
                 </form>
+                </div>
             </div>
 
-            <div class="card">
+            <div class="card page-section" data-page="nodes">
                 <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
                     <h2 style="margin:0; font-size:18px;">已反代的媒体库</h2>
                     <div style="display: flex; gap: 10px; align-items:center; flex-wrap: wrap;">
-                        <button class="btn-submit" onclick="pingAllNodes()" style="background:#32ade6; padding: 10px 14px; font-size: 13px;">⚡ 全局测速</button>
-                        <button id="btnPurge" class="btn-submit" onclick="purgeCache()" style="background:#ff2d55; padding: 10px 14px; font-size: 13px;">🧹 刷新全站海报</button>
                         <input type="text" id="searchNode" class="search-input" placeholder="🔍 搜索备注或后缀查找..." onkeyup="filterNodesList()">
+                        <button id="btnPurge" class="btn-submit" onclick="purgeCache()" style="padding: 10px 14px; font-size: 13px;">🧹 刷新全站海报</button>
+                        <button class="btn-submit" onclick="pingAllNodes()" style="padding: 10px 14px; font-size: 13px;">⚡ 全局测速</button>
+                        <button class="btn-submit" onclick="openNodeModal()" style="padding: 10px 14px; font-size: 13px;">➕ 添加节点</button>
                     </div>
                 </div>
                 <div style="background: rgba(0, 122, 255, 0.05); padding: 12px 20px; border-radius: 12px; border: 1px dashed var(--primary); margin-bottom: 20px; margin-top: 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
@@ -448,7 +597,7 @@ const HTML_UI = `
                 <option value="">🔄 读取模式中...</option>
             </select>
 
-            <button onclick="batchUpdateModes()" style="background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,113,227,0.2);">
+            <button class="btn-submit" onclick="batchUpdateModes()" style="padding: 8px 16px; border-radius: 8px; font-weight: bold; transition: 0.2s;">
                 🚀 批量应用模式
             </button>
 
@@ -461,15 +610,8 @@ const HTML_UI = `
             
         </div>
         
-        <div style="text-align: center; padding-top: 10px; padding-bottom: 20px;">
-            <a href="https://t.me/MakkaPakkaOvO" target="_blank" style="text-decoration: none; color: var(--text); font-weight: 600; display: inline-flex; align-items: center; padding: 12px 24px; background: var(--card); border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: 0.3s; font-size: 14px; border: 1px solid var(--border);">
-                ${SVG_TG}
-                联系作者 MakkaPakkaOvO
-            </a>
-            <div style="margin-top: 20px; font-size: 12px; color: var(--text-sec); line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto; padding: 0 15px;">
-                <strong>免责声明:</strong> 本项目仅供学习与技术测试使用，请遵守当地法律法规。使用者对配置、转发内容与访问行为承担全部责任，开发者不对任何直接或间接损失负责。
-            </div>
-        </div>
+        </main>
+    </div>
     </div>
 
     <script>
@@ -481,6 +623,35 @@ const HTML_UI = `
         let sortableInstance = null;
         let trendChartInstance = null;
         let locationChartInstance = null;
+        let currentPage = 'home';
+
+        function switchPage(page, navEl = null) {
+            currentPage = page;
+            document.querySelectorAll('.page-section').forEach(section => {
+                const isActive = section.dataset.page === page;
+                section.hidden = !isActive;
+                section.classList.toggle('active', isActive);
+            });
+
+            document.querySelectorAll('[data-page-nav]').forEach(link => link.classList.remove('active'));
+            if (navEl) navEl.classList.add('active');
+            else {
+                const activeNav = document.querySelector(\`[data-page-nav="\${page}"]\`);
+                if (activeNav) activeNav.classList.add('active');
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('dashboardShell').classList.toggle('sidebar-collapsed');
+        }
+
+        function openNodeModal() {
+            document.getElementById('nodeModal').style.display = 'block';
+        }
+
+        function closeNodeModal() {
+            document.getElementById('nodeModal').style.display = 'none';
+        }
 
         // 设置 Chart.js 响应暗色模式
         function updateChartColors() {
@@ -1024,7 +1195,7 @@ const HTML_UI = `
             container.appendChild(emptyInp);
             
             handleTargetInputs(); 
-            window.scrollTo({ top: document.getElementById('addForm').offsetTop - 100, behavior: 'smooth' });
+            openNodeModal();
         }
 
         document.getElementById('addForm').onsubmit = async (e) => {
@@ -1062,6 +1233,7 @@ const HTML_UI = `
                 resetTargetInputs(); 
                 
                 showToast('✅ 节点部署成功');
+                closeNodeModal();
                 load();
             } catch(err) {
                 showToast('❌ 保存失败: ' + err.message);
@@ -1409,6 +1581,10 @@ const HTML_UI = `
         
         // 当网页加载完成时，延迟0.5秒执行探针扫描（避免卡顿主页渲染）
         window.addEventListener('DOMContentLoaded', () => {
+            switchPage('home');
+            document.getElementById('nodeModal')?.addEventListener('click', (e) => {
+                if (e.target.id === 'nodeModal') closeNodeModal();
+            });
             setTimeout(fetchCfTrace, 500);
         });
     // 🚀 新增：全云厂商节点数据库 (包含 Cloudflare 支持的所有主要区域)
