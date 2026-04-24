@@ -272,7 +272,7 @@ const CSS_DASHBOARD_THEME = `
     .ring.r3 { background: conic-gradient(#6d4ce8 0 74%, #ebe8ff 74% 100%); }
     .dash-main-grid {
         display: grid;
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1.55fr 1fr;
         gap: 14px;
     }
     .bottom-grid {
@@ -299,6 +299,30 @@ const CSS_DASHBOARD_THEME = `
         cursor: pointer;
         padding: 8px 12px;
         flex-shrink: 0;
+    }
+    .global-page-menu {
+        position: fixed;
+        top: 74px;
+        right: 28px;
+        z-index: 999;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid #dfe3fb;
+        background: rgba(255,255,255,.95);
+        color: #5d638f;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 700;
+        box-shadow: 0 8px 18px rgba(90, 98, 148, .16);
+        cursor: pointer;
+    }
+    .global-page-menu i {
+        width: 28px; height: 28px; border-radius: 50%;
+        display: inline-flex; align-items: center; justify-content: center;
+        background: linear-gradient(120deg,#7a63ff,#f05eb9);
+        color: #fff; font-style: normal;
     }
     .modal-close-btn {
         border: 1px solid #dfe3fb;
@@ -340,6 +364,7 @@ const CSS_DASHBOARD_THEME = `
         .side-panel { padding: 12px 10px; top: 12px; min-height: calc(100vh - 24px); }
         .side-nav a { padding: 10px 8px; font-size: 12px; text-align: center; }
         .brand { font-size: 22px; text-align: center; }
+        .global-page-menu { right: 12px; top: 62px; transform: scale(.9); transform-origin: top right; }
     }
     @media (max-width: 768px) {
         .stats-ring-grid { grid-template-columns: 1fr; }
@@ -396,18 +421,19 @@ const HTML_UI = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>难遇我</title>
+    <title>Reverse Proxy</title>
     <style>${CSS_COMMON}${CSS_DASHBOARD_THEME}</style>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div id="toast"></div>
+    <button class="global-page-menu" onclick="toggleSidebar()" aria-label="菜单"><i>☰</i>难遇我</button>
     
     <div class="container">
     <div class="dashboard-shell" id="dashboardShell">
         <aside class="side-panel">
-            <h2 class="brand">难遇我</h2>
+            <h2 class="brand">Reverse Proxy</h2>
             <nav class="side-nav">
                 <a class="active" href="javascript:void(0)" data-page-nav="home" onclick="switchPage('home', this)">代理主页</a>
                 <a href="javascript:void(0)" data-page-nav="nodes" onclick="switchPage('nodes', this)">代理节点</a>
@@ -421,12 +447,11 @@ const HTML_UI = `
         <main class="main-panel">
             <div class="hero-card page-section active" data-page="home">
                 <div>
-                    <div style="font-size:38px; font-weight:800; margin-bottom:4px; font-family: 'Trebuchet MS', 'Avenir Next', sans-serif; letter-spacing: 1px;">难遇我</div>
-                    <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 3px;">NanYuWo</div>
+                    <div style="font-size:38px; font-weight:800; margin-bottom:4px; font-family: 'Trebuchet MS', 'Avenir Next', sans-serif; letter-spacing: 1px;">Reverse Proxy</div>
+                    <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 1px;">ReverseProxy</div>
                 </div>
                 <div class="hero-right">
                     <div style="font-size: 14px; color:#2f365b; font-weight:600;"><span class="status-dot"></span>Server is Active</div>
-                    <button class="avatar-menu-btn" onclick="toggleSidebar()" aria-label="菜单">☰</button>
                 </div>
             </div>
             <div id="homeDashboard" class="card page-section" data-page="home" style="box-shadow: 0 10px 28px rgba(64, 72, 134, 0.09); margin-bottom: 14px; background: rgba(255,255,255,0.96);">
@@ -450,11 +475,11 @@ const HTML_UI = `
                     </div>
                 </div>
                 <div class="dash-main-grid" style="margin-top:12px;">
-                    <div style="border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95);">
-                        <div style="font-size:18px;font-weight:700;color:#2f365b;margin-bottom:10px;">过去 7 天全站播放并发趋势</div>
+                    <div style="border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95); min-height: 340px;">
+                        <div style="font-size:18px;font-weight:700;color:#2f365b;margin-bottom:10px;">📈 过去 7 天全站播放并发趋势</div>
                         <canvas id="trendChart"></canvas>
                     </div>
-                    <div style="border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95); display: flex; justify-content: center; align-items: center;">
+                    <div style="border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95); display: flex; justify-content: center; align-items: center; min-height: 340px;">
                         <canvas id="locationChart"></canvas>
                     </div>
                 </div>
@@ -776,7 +801,7 @@ const HTML_UI = `
                 }
             }
             
-            let top5Html = '<h3 style="margin-top: 30px; margin-bottom:16px;">🏆 今日节点流量消耗 TOP 5</h3><div style="background: rgba(120,120,120,0.05); padding: 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px;">';
+            let top5Html = '<h3 style="margin-top:0; margin-bottom:12px; color:#202749;">🏆 今日节点流量消耗 TOP 5</h3><div style="background: linear-gradient(180deg, rgba(245,255,247,.95), rgba(240,250,245,.95)); padding: 16px; border-radius: 14px; border: 1px solid #cbeed6; margin-bottom: 0;">';
             
             // ==========================================
             // 🚀 核心优化：听你的天才思路！直接去网页现有的卡片里“抓取”数据，绝不等待变量！
@@ -812,10 +837,10 @@ const HTML_UI = `
                 const top5 = validNodes.sort((a, b) => parseTrafficToBytes(b.todayBandwidth) - parseTrafficToBytes(a.todayBandwidth)).slice(0, 5);
                 
                 if (top5.length > 0) {
-                    top5Html += '<ul style="margin:0; padding-left: 20px; line-height: 2; font-size: 14px; color: var(--text);">';
+                    top5Html += '<ul style="margin:0; padding-left: 0; line-height: 1.9; font-size: 14px; color: var(--text); list-style:none;">';
                     top5.forEach((r, idx) => {
                         const rankColor = idx === 0 ? '#ff3b30' : (idx === 1 ? '#ff9500' : (idx === 2 ? '#ffcc00' : 'var(--text-sec)'));
-                        top5Html += \`<li><strong style="color:\${rankColor}; font-size: 15px;">#\${idx+1}</strong> \${r.remark} (/\${r.prefix}) —— 消耗: <strong style="color:var(--primary); font-family: monospace;">\${r.todayBandwidth}</strong></li>\`;
+                        top5Html += \`<li style="display:flex; align-items:center; justify-content:space-between; gap:10px; border-bottom:1px dashed #b7e5c6; padding:4px 0;"><span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:\${rankColor};margin-right:7px;"></span><strong style="color:\${rankColor}; font-size: 15px;">#\${idx+1}</strong> \${r.remark}</span><strong style="color:#1d8a43; font-family: monospace;">\${r.todayBandwidth}</strong></li>\`;
                     });
                     top5Html += '</ul>';
                 } else {
