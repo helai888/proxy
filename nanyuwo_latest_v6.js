@@ -318,6 +318,8 @@ const CSS_DASHBOARD_THEME = `
         font-weight: 700;
         box-shadow: 0 8px 18px rgba(90, 98, 148, .16);
         cursor: pointer;
+        user-select: none;
+        touch-action: none;
     }
     .global-page-menu i {
         width: 28px; height: 28px; border-radius: 50%;
@@ -330,7 +332,7 @@ const CSS_DASHBOARD_THEME = `
         top: 118px;
         right: 28px;
         z-index: 998;
-        width: 196px;
+        width: 210px;
         background: rgba(255,255,255,.98);
         border: 1px solid rgba(190,195,226,.55);
         border-radius: 14px;
@@ -346,10 +348,14 @@ const CSS_DASHBOARD_THEME = `
         text-align: left;
         border-radius: 10px;
         padding: 10px 12px;
-        font-size: 16px;
+        font-size: 15px;
         color: #2e355b;
         font-weight: 600;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
     }
     .quick-menu a.active, .quick-menu a:hover, .quick-menu button:hover {
         background: linear-gradient(90deg,#f0ecff,#fceefd);
@@ -803,9 +809,27 @@ const HTML_UI = `
 
         function toggleSidebar(forceClose = false) {
             const quick = document.getElementById('quickMenu');
+            const btn = document.querySelector('.global-page-menu');
             if (!quick) return;
             if (forceClose) quick.classList.remove('show');
             else quick.classList.toggle('show');
+            if (quick.classList.contains('show') && btn) positionQuickMenu(btn, quick);
+        }
+
+        function positionQuickMenu(btn, quick) {
+            const btnRect = btn.getBoundingClientRect();
+            const menuWidth = quick.offsetWidth || 210;
+            const menuHeight = quick.offsetHeight || 260;
+            const pad = 10;
+            let left = btnRect.right - menuWidth;
+            let top = btnRect.bottom + 10;
+            if (left < pad) left = pad;
+            if (left + menuWidth > window.innerWidth - pad) left = window.innerWidth - menuWidth - pad;
+            if (top + menuHeight > window.innerHeight - pad) top = btnRect.top - menuHeight - 10;
+            if (top < pad) top = pad;
+            quick.style.left = left + 'px';
+            quick.style.top = top + 'px';
+            quick.style.right = 'auto';
         }
 
         function openNodeModal() {
@@ -1751,6 +1775,51 @@ const HTML_UI = `
         // 当网页加载完成时，延迟0.5秒执行探针扫描（避免卡顿主页渲染）
         window.addEventListener('DOMContentLoaded', () => {
             switchPage('home');
+            const floatBtn = document.querySelector('.global-page-menu');
+            const quick = document.getElementById('quickMenu');
+            let dragState = null;
+
+            if (floatBtn) {
+                floatBtn.addEventListener('pointerdown', (e) => {
+                    const rect = floatBtn.getBoundingClientRect();
+                    dragState = {
+                        id: e.pointerId,
+                        startX: e.clientX,
+                        startY: e.clientY,
+                        left: rect.left,
+                        top: rect.top,
+                        moved: false
+                    };
+                    floatBtn.setPointerCapture(e.pointerId);
+                });
+
+                floatBtn.addEventListener('pointermove', (e) => {
+                    if (!dragState || e.pointerId !== dragState.id) return;
+                    const dx = e.clientX - dragState.startX;
+                    const dy = e.clientY - dragState.startY;
+                    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragState.moved = true;
+                    let left = dragState.left + dx;
+                    let top = dragState.top + dy;
+                    const rect = floatBtn.getBoundingClientRect();
+                    const maxLeft = window.innerWidth - rect.width - 8;
+                    const maxTop = window.innerHeight - rect.height - 8;
+                    left = Math.max(8, Math.min(maxLeft, left));
+                    top = Math.max(8, Math.min(maxTop, top));
+                    floatBtn.style.left = left + 'px';
+                    floatBtn.style.top = top + 'px';
+                    floatBtn.style.right = 'auto';
+                    if (quick && quick.classList.contains('show')) positionQuickMenu(floatBtn, quick);
+                });
+
+                const endDrag = (e) => {
+                    if (!dragState || e.pointerId !== dragState.id) return;
+                    if (dragState.moved) e.preventDefault();
+                    dragState = null;
+                };
+                floatBtn.addEventListener('pointerup', endDrag);
+                floatBtn.addEventListener('pointercancel', endDrag);
+            }
+
             document.getElementById('nodeModal')?.addEventListener('click', (e) => {
                 if (e.target.id === 'nodeModal') closeNodeModal();
             });
@@ -1760,6 +1829,11 @@ const HTML_UI = `
                 if (quick && btn && quick.classList.contains('show')) {
                     if (!quick.contains(e.target) && !btn.contains(e.target)) quick.classList.remove('show');
                 }
+            });
+            window.addEventListener('resize', () => {
+                const quick = document.getElementById('quickMenu');
+                const btn = document.querySelector('.global-page-menu');
+                if (quick && btn && quick.classList.contains('show')) positionQuickMenu(btn, quick);
             });
             setTimeout(fetchCfTrace, 500);
         });
