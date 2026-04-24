@@ -132,6 +132,97 @@ const CSS_COMMON = `
     }
 `;
 
+const CSS_DASHBOARD_THEME = `
+    body {
+        background: radial-gradient(circle at 95% 8%, rgba(255, 80, 180, 0.32), transparent 26%),
+                    radial-gradient(circle at 10% 85%, rgba(120, 96, 255, 0.18), transparent 30%),
+                    #eff1ff;
+        color: #303759;
+    }
+    body.dark {
+        background: radial-gradient(circle at 95% 8%, rgba(255, 80, 180, 0.25), transparent 26%),
+                    radial-gradient(circle at 10% 85%, rgba(120, 96, 255, 0.18), transparent 30%),
+                    #111425;
+    }
+    .container {
+        max-width: 1500px;
+        background: rgba(247, 248, 255, 0.8);
+        border: 1px solid rgba(255,255,255,0.75);
+        border-radius: 28px;
+        padding: 20px;
+        box-shadow: 0 18px 55px rgba(52, 58, 112, 0.12);
+    }
+    .dashboard-shell { display: grid; grid-template-columns: 280px 1fr; gap: 20px; min-height: 88vh; }
+    .side-panel {
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 24px;
+        padding: 26px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .brand {
+        font-size: 34px;
+        font-weight: 800;
+        background: linear-gradient(90deg, #6f5cff, #f55bb7);
+        -webkit-background-clip: text;
+        color: transparent;
+        margin: 0;
+    }
+    .side-nav a {
+        display: block;
+        text-decoration: none;
+        color: var(--text-sec);
+        font-weight: 600;
+        padding: 12px 14px;
+        border-radius: 12px;
+        margin-bottom: 6px;
+    }
+    .side-nav a.active {
+        color: #fff;
+        background: linear-gradient(90deg, #6b58ff, #f05ab9);
+        box-shadow: 0 8px 18px rgba(107,88,255,.24);
+    }
+    .main-panel { min-width: 0; }
+    .hero-card {
+        background: rgba(255,255,255,0.88);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 20px;
+        padding: 18px 20px;
+        margin-bottom: 18px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .hero-chip {
+        background: #eef0ff;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        color: #5f6385;
+        border: 1px solid #e0e3fa;
+    }
+    .card {
+        background: rgba(255,255,255,0.94);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(67, 74, 131, 0.08);
+    }
+    .btn-submit {
+        background: linear-gradient(90deg, #7057ff, #ef5bb8);
+        box-shadow: 0 7px 20px rgba(113, 87, 255, .25);
+        border-radius: 12px;
+    }
+    .btn-submit:hover { filter: brightness(1.03); }
+    @media (max-width: 1100px) {
+        .dashboard-shell { grid-template-columns: 1fr; }
+        .side-panel { padding: 16px; }
+    }
+`;
+
 const LOGIN_UI = `
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -179,8 +270,8 @@ const HTML_UI = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MakkaPakka的反代面板</title>
-    <style>${CSS_COMMON}</style>
+    <title>难遇我</title>
+    <style>${CSS_COMMON}${CSS_DASHBOARD_THEME}</style>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -222,6 +313,32 @@ const HTML_UI = `
     </div>
 
     <div class="container">
+    <div class="dashboard-shell">
+        <aside class="side-panel">
+            <h2 class="brand">DeProxy</h2>
+            <nav class="side-nav">
+                <a class="active" href="javascript:void(0)">Dashboard</a>
+                <a href="javascript:void(0)">Purchase Plans</a>
+                <a href="javascript:void(0)">Activity</a>
+                <a href="javascript:void(0)">Private Proxies</a>
+            </nav>
+            <div style="margin-top:auto; color:var(--text-sec); font-size:12px; line-height:1.6;">
+                <div>Settings</div>
+                <div>Log Out</div>
+            </div>
+        </aside>
+        <main class="main-panel">
+            <div class="hero-card">
+                <div>
+                    <div style="font-size:38px; font-weight:800; margin-bottom:4px;">Dashboard</div>
+                    <div style="color:var(--text-sec);">欢迎回来，已套用新版视觉风格</div>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <span class="hero-chip">● Server is Active</span>
+                    <span class="hero-chip">Data Remaining</span>
+                    <span class="hero-chip">Time Remaining</span>
+                </div>
+            </div>
     <div id="updateAlert" class="card" style="display: none; border-left: 4px solid #34c759; background-color: rgba(52, 199, 89, 0.05); margin-top: 20px;">
             <div style="display:flex; justify-content: space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                 <div>
@@ -470,6 +587,8 @@ const HTML_UI = `
                 <strong>免责声明:</strong> 本项目仅供学习与技术测试使用，请遵守当地法律法规。使用者对配置、转发内容与访问行为承担全部责任，开发者不对任何直接或间接损失负责。
             </div>
         </div>
+        </main>
+    </div>
     </div>
 
     <script>
