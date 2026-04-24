@@ -146,8 +146,8 @@ const CSS_DASHBOARD_THEME = `
     }
     .container {
         max-width: 1500px;
-        background: rgba(247, 248, 255, 0.8);
-        border: 1px solid rgba(255,255,255,0.75);
+        background: rgba(247, 248, 255, 0.72);
+        border: 1px solid rgba(255,255,255,0.82);
         border-radius: 28px;
         padding: 20px;
         box-shadow: 0 18px 55px rgba(52, 58, 112, 0.12);
@@ -195,10 +195,10 @@ const CSS_DASHBOARD_THEME = `
     }
     .main-panel {
         min-width: 0;
-        background: linear-gradient(180deg, rgba(249,250,255,0.88), rgba(243,245,255,0.95));
+        background: linear-gradient(180deg, rgba(245,247,255,0.9), rgba(240,243,255,0.9));
         border-radius: 24px;
         padding: 10px 14px 14px;
-        border: 1px solid rgba(190, 195, 226, .45);
+        border: none;
     }
     .hero-card {
         background: rgba(255,255,255,0.88);
@@ -225,12 +225,22 @@ const CSS_DASHBOARD_THEME = `
         background: #fff;
         color: #575d88;
         border-radius: 10px;
-        font-size: 14px;
+        font-size: 20px;
         font-weight: 700;
         cursor: pointer;
-        padding: 10px 14px;
+        padding: 8px 12px;
         flex-shrink: 0;
     }
+    .floating-menu {
+        position: sticky;
+        top: 8px;
+        left: 0;
+        z-index: 30;
+        width: fit-content;
+        margin-bottom: 8px;
+        display: none;
+    }
+    .dashboard-shell.sidebar-collapsed .floating-menu { display: block; }
     .modal-close-btn {
         border: 1px solid #dfe3fb;
         background: #fff;
@@ -271,6 +281,7 @@ const CSS_DASHBOARD_THEME = `
         .side-panel { padding: 12px 10px; top: 12px; min-height: calc(100vh - 24px); }
         .side-nav a { padding: 10px 8px; font-size: 12px; text-align: center; }
         .brand { font-size: 22px; text-align: center; }
+        .floating-menu { top: 0; }
     }
     @media (max-width: 768px) {
         .node-actions .search-input { width: 100%; order: 1; }
@@ -337,7 +348,7 @@ const HTML_UI = `
     <div class="dashboard-shell" id="dashboardShell">
         <aside class="side-panel">
             <div style="display:flex; justify-content:flex-start;">
-                <button class="menu-toggle" onclick="toggleSidebar()">☰ 菜单</button>
+                <button class="menu-toggle" onclick="toggleSidebar()" aria-label="切换导航栏">☰</button>
             </div>
             <h2 class="brand">难遇我</h2>
             <nav class="side-nav">
@@ -346,21 +357,24 @@ const HTML_UI = `
                 <a href="javascript:void(0)" data-page-nav="ip" onclick="switchPage('ip', this)">优选IP</a>
                 <a href="javascript:void(0)" data-page-nav="update" onclick="switchPage('update', this)">版本更新</a>
             </nav>
-            <div style="margin-top:8px; display:flex; flex-direction:column; gap:8px;">
+            <div style="margin-top:auto; display:flex; flex-direction:column; gap:8px; padding-top:24px;">
                 <button class="btn-submit" onclick="logout()" style="width:100%; padding:10px 12px; font-size:13px;">退出系统</button>
             </div>
         </aside>
         <main class="main-panel">
+            <div class="floating-menu">
+                <button class="menu-toggle" onclick="toggleSidebar()" aria-label="切换导航栏">☰</button>
+            </div>
             <div class="hero-card page-section active" data-page="home">
                 <div>
                     <div style="font-size:38px; font-weight:800; margin-bottom:4px; font-family: 'Trebuchet MS', 'Avenir Next', sans-serif; letter-spacing: 1px;">难遇我</div>
                     <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 3px;">NanYuWo</div>
                 </div>
             </div>
-            <div id="homeDashboard" class="card page-section" data-page="home" style="box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin-bottom: 14px;">
+            <div id="homeDashboard" class="card page-section" data-page="home" style="box-shadow: 0 10px 28px rgba(64, 72, 134, 0.09); margin-bottom: 14px; background: rgba(255,255,255,0.96);">
                 <h2 style="margin-top:0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        📊 数据大屏 <span style="font-size:14px; font-weight: normal; color: var(--text-sec);">代理主页实时概览</span>
+                        <span style="font-size:34px; line-height:1;">📊</span><span style="font-size:40px; line-height:1; font-weight:800; letter-spacing:1px; background: linear-gradient(90deg,#364173,#535f95); -webkit-background-clip:text; color:transparent;">数据大屏</span> <span style="font-size:14px; font-weight: normal; color: var(--text-sec);">代理主页实时概览</span>
                     </div>
                     <div style="font-size: 13px; background: rgba(0,113,227,0.1); color: var(--primary); padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0,113,227,0.2); display: flex; gap: 15px; flex-wrap: wrap;">
                         <span> 今天: <strong id="trafficToday">加载中...</strong></span>
@@ -369,10 +383,10 @@ const HTML_UI = `
                     </div>
                 </h2>
                 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top:20px;">
-                    <div style="flex: 2; min-width: 300px; border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: rgba(120,120,120,0.03);">
+                    <div style="flex: 2; min-width: 300px; border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95);">
                         <canvas id="trendChart"></canvas>
                     </div>
-                    <div style="flex: 1; min-width: 300px; border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: rgba(120,120,120,0.03); display: flex; justify-content: center; align-items: center;">
+                    <div style="flex: 1; min-width: 300px; border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95); display: flex; justify-content: center; align-items: center;">
                         <canvas id="locationChart"></canvas>
                     </div>
                 </div>
