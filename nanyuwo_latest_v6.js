@@ -356,6 +356,9 @@ const CSS_DASHBOARD_THEME = `
         align-items: center;
         gap: 8px;
         white-space: nowrap;
+        text-decoration: none;
+        font-family: "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+        letter-spacing: .2px;
     }
     .quick-menu a.active, .quick-menu a:hover, .quick-menu button:hover {
         background: linear-gradient(90deg,#f0ecff,#fceefd);
@@ -466,13 +469,13 @@ const HTML_UI = `
 </head>
 <body>
     <div id="toast"></div>
-    <button class="global-page-menu" onclick="toggleSidebar()" aria-label="菜单"><i>☰</i>难遇我</button>
+    <button class="global-page-menu" onclick="toggleSidebar()" aria-label="菜单"><i>☰</i></button>
     <div id="quickMenu" class="quick-menu">
-        <a href="javascript:void(0)" data-quick-nav="home" onclick="switchPage('home'); toggleSidebar(true);">🏠 代理主页</a>
-        <a href="javascript:void(0)" data-quick-nav="nodes" onclick="switchPage('nodes'); toggleSidebar(true);">🗂️ 代理节点</a>
-        <a href="javascript:void(0)" data-quick-nav="ip" onclick="switchPage('ip'); toggleSidebar(true);">🛡️ 优选IP</a>
-        <a href="javascript:void(0)" data-quick-nav="update" onclick="switchPage('update'); toggleSidebar(true);">🔄 版本更新</a>
-        <button onclick="logout()">↪ 退出</button>
+        <a href="javascript:void(0)" data-quick-nav="home" onclick="switchPage('home'); toggleSidebar(true);">代理主页</a>
+        <a href="javascript:void(0)" data-quick-nav="nodes" onclick="switchPage('nodes'); toggleSidebar(true);">代理节点</a>
+        <a href="javascript:void(0)" data-quick-nav="ip" onclick="switchPage('ip'); toggleSidebar(true);">优选IP</a>
+        <a href="javascript:void(0)" data-quick-nav="update" onclick="switchPage('update'); toggleSidebar(true);">版本更新</a>
+        <button onclick="logout()">退出系统</button>
     </div>
     
     <div class="container">
@@ -492,17 +495,17 @@ const HTML_UI = `
         <main class="main-panel">
             <div class="hero-card page-section active" data-page="home">
                 <div>
-                    <div style="font-size:52px; font-weight:700; margin-bottom:4px; font-family: 'Segoe Script', 'Brush Script MT', 'Snell Roundhand', cursive; letter-spacing: 1px; background: linear-gradient(90deg,#6f5cff,#f55bb7); -webkit-background-clip:text; color:transparent;">Reverse Proxy</div>
-                    <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 1px;">ReverseProxy</div>
+                    <div style="font-size:52px; font-weight:700; margin-bottom:4px; font-family: 'Segoe Script', 'Brush Script MT', 'Snell Roundhand', cursive; letter-spacing: 1px; background: linear-gradient(90deg,#6f5cff,#f55bb7); -webkit-background-clip:text; color:transparent;">再晚些心动</div>
+                    <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 1px;">Late Heartbeat</div>
                 </div>
                 <div class="hero-right">
-                    <div style="font-size: 14px; color:#2f365b; font-weight:600;"><span class="status-dot"></span>Server is Active</div>
+                    <div style="font-size: 14px; color:#2f365b; font-weight:600;"><span class="status-dot"></span>Late Heartbeat</div>
                 </div>
             </div>
             <div id="homeDashboard" class="card page-section" data-page="home" style="box-shadow: 0 10px 28px rgba(64, 72, 134, 0.09); margin-bottom: 14px; background: rgba(255,255,255,0.96);">
                 <h2 style="margin-top:0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size:34px; line-height:1;">📊</span><span style="font-size:40px; line-height:1; font-weight:800; letter-spacing:1px; background: linear-gradient(90deg,#364173,#535f95); -webkit-background-clip:text; color:transparent;">数据大屏</span> <span style="font-size:14px; font-weight: normal; color: var(--text-sec);">代理主页实时概览</span>
+                        <span style="font-size:34px; line-height:1;">📊</span><span style="font-size:40px; line-height:1; font-weight:800; letter-spacing:1px; background: linear-gradient(90deg,#364173,#535f95); -webkit-background-clip:text; color:transparent;">数据大屏</span> <span style="font-size:14px; font-weight: normal; color: var(--text-sec);">反代数据</span>
                     </div>
                 </h2>
                 <div class="stats-ring-grid">
