@@ -212,6 +212,75 @@ const CSS_DASHBOARD_THEME = `
         flex-wrap: wrap;
         align-items: center;
     }
+    .hero-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #33c86e;
+        display: inline-block;
+        margin-right: 8px;
+        box-shadow: 0 0 0 3px rgba(51,200,110,.18);
+    }
+    .avatar-menu-btn {
+        width: 42px;
+        height: 42px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        background: linear-gradient(120deg, #7a63ff, #f05eb9);
+        color: #fff;
+        font-size: 18px;
+        box-shadow: 0 8px 20px rgba(114, 90, 255, .28);
+    }
+    .stats-ring-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(180px, 1fr));
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+    .stats-ring-item {
+        background: rgba(255,255,255,0.95);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .ring {
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        background: conic-gradient(#7a5dff 0 70%, #e9e8ff 70% 100%);
+        position: relative;
+        flex-shrink: 0;
+    }
+    .ring::after {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border-radius: 50%;
+        background: #fff;
+    }
+    .ring.r2 { background: conic-gradient(#c96ad8 0 68%, #efe9fa 68% 100%); }
+    .ring.r3 { background: conic-gradient(#6d4ce8 0 74%, #ebe8ff 74% 100%); }
+    .dash-main-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 14px;
+    }
+    .bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 14px;
+        margin-top: 14px;
+    }
     .hero-chip {
         background: #eef0ff;
         padding: 8px 12px;
@@ -231,16 +300,6 @@ const CSS_DASHBOARD_THEME = `
         padding: 8px 12px;
         flex-shrink: 0;
     }
-    .floating-menu {
-        position: sticky;
-        top: 8px;
-        left: 0;
-        z-index: 30;
-        width: fit-content;
-        margin-bottom: 8px;
-        display: none;
-    }
-    .dashboard-shell.sidebar-collapsed .floating-menu { display: block; }
     .modal-close-btn {
         border: 1px solid #dfe3fb;
         background: #fff;
@@ -281,9 +340,10 @@ const CSS_DASHBOARD_THEME = `
         .side-panel { padding: 12px 10px; top: 12px; min-height: calc(100vh - 24px); }
         .side-nav a { padding: 10px 8px; font-size: 12px; text-align: center; }
         .brand { font-size: 22px; text-align: center; }
-        .floating-menu { top: 0; }
     }
     @media (max-width: 768px) {
+        .stats-ring-grid { grid-template-columns: 1fr; }
+        .dash-main-grid, .bottom-grid { grid-template-columns: 1fr; }
         .node-actions .search-input { width: 100%; order: 1; }
         .node-actions .node-action-btn { flex: 1 1 calc(33.33% - 8px); min-width: 110px; text-align: center; order: 2; }
     }
@@ -347,9 +407,6 @@ const HTML_UI = `
     <div class="container">
     <div class="dashboard-shell" id="dashboardShell">
         <aside class="side-panel">
-            <div style="display:flex; justify-content:flex-start;">
-                <button class="menu-toggle" onclick="toggleSidebar()" aria-label="切换导航栏">☰</button>
-            </div>
             <h2 class="brand">难遇我</h2>
             <nav class="side-nav">
                 <a class="active" href="javascript:void(0)" data-page-nav="home" onclick="switchPage('home', this)">代理主页</a>
@@ -362,13 +419,14 @@ const HTML_UI = `
             </div>
         </aside>
         <main class="main-panel">
-            <div class="floating-menu">
-                <button class="menu-toggle" onclick="toggleSidebar()" aria-label="切换导航栏">☰</button>
-            </div>
             <div class="hero-card page-section active" data-page="home">
                 <div>
                     <div style="font-size:38px; font-weight:800; margin-bottom:4px; font-family: 'Trebuchet MS', 'Avenir Next', sans-serif; letter-spacing: 1px;">难遇我</div>
                     <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 3px;">NanYuWo</div>
+                </div>
+                <div class="hero-right">
+                    <div style="font-size: 14px; color:#2f365b; font-weight:600;"><span class="status-dot"></span>Server is Active</div>
+                    <button class="avatar-menu-btn" onclick="toggleSidebar()" aria-label="菜单">☰</button>
                 </div>
             </div>
             <div id="homeDashboard" class="card page-section" data-page="home" style="box-shadow: 0 10px 28px rgba(64, 72, 134, 0.09); margin-bottom: 14px; background: rgba(255,255,255,0.96);">
@@ -376,26 +434,41 @@ const HTML_UI = `
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="font-size:34px; line-height:1;">📊</span><span style="font-size:40px; line-height:1; font-weight:800; letter-spacing:1px; background: linear-gradient(90deg,#364173,#535f95); -webkit-background-clip:text; color:transparent;">数据大屏</span> <span style="font-size:14px; font-weight: normal; color: var(--text-sec);">代理主页实时概览</span>
                     </div>
-                    <div style="font-size: 13px; background: rgba(0,113,227,0.1); color: var(--primary); padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0,113,227,0.2); display: flex; gap: 15px; flex-wrap: wrap;">
-                        <span> 今天: <strong id="trafficToday">加载中...</strong></span>
-                        <span>1周内: <strong id="traffic7d">加载中...</strong></span>
-                        <span>1月内: <strong id="traffic30d">加载中...</strong></span>
-                    </div>
                 </h2>
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top:20px;">
-                    <div style="flex: 2; min-width: 300px; border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95);">
+                <div class="stats-ring-grid">
+                    <div class="stats-ring-item">
+                        <div class="ring"></div>
+                        <div><div style="color:#6f7595;font-size:13px;">今天</div><div id="trafficToday" style="font-size:20px;font-weight:800;color:#232946;">加载中...</div><div style="font-size:12px;color:#8a90ad;">Used</div></div>
+                    </div>
+                    <div class="stats-ring-item">
+                        <div class="ring r2"></div>
+                        <div><div style="color:#6f7595;font-size:13px;">1周内</div><div id="traffic7d" style="font-size:20px;font-weight:800;color:#232946;">加载中...</div><div style="font-size:12px;color:#8a90ad;">Used</div></div>
+                    </div>
+                    <div class="stats-ring-item">
+                        <div class="ring r3"></div>
+                        <div><div style="color:#6f7595;font-size:13px;">1月内</div><div id="traffic30d" style="font-size:20px;font-weight:800;color:#232946;">加载中...</div><div style="font-size:12px;color:#8a90ad;">Used</div></div>
+                    </div>
+                </div>
+                <div class="dash-main-grid" style="margin-top:12px;">
+                    <div style="border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95);">
+                        <div style="font-size:18px;font-weight:700;color:#2f365b;margin-bottom:10px;">过去 7 天全站播放并发趋势</div>
                         <canvas id="trendChart"></canvas>
                     </div>
-                    <div style="flex: 1; min-width: 300px; border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95); display: flex; justify-content: center; align-items: center;">
+                    <div style="border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95); display: flex; justify-content: center; align-items: center;">
                         <canvas id="locationChart"></canvas>
                     </div>
                 </div>
-                <h3 style="margin-top: 30px; margin-bottom:16px;">🕵️ 最新独立播放记录 <span style="font-size:12px; color:var(--text-sec);">(仅拦截 PlaybackInfo 真实播放)</span></h3>
-                <div class="table-wrapper">
+                <div class="bottom-grid">
+                <div id="top5-simple-container" style="margin-top:0;"></div>
+                <div>
+                <h3 style="margin-top: 0; margin-bottom:12px;">🕵️ 最新独立播放记录 <span style="font-size:12px; color:var(--text-sec);">(仅拦截 PlaybackInfo 真实播放)</span></h3>
+                <div class="table-wrapper" style="border-radius:16px;">
                     <table style="width: 100%;">
                         <thead><tr><th>访问时间</th><th>目标节点</th><th>真实 IP 地址</th><th>归属地</th><th>客户端/设备标识 (User-Agent)</th></tr></thead>
                         <tbody id="logTableBody"><tr><td colspan="5" style="text-align:center; padding: 30px;">加载数据中...</td></tr></tbody>
                     </table>
+                </div>
+                </div>
                 </div>
             </div>
     <div id="updateAlert" class="card page-section" data-page="update" style="display: none; border-left: 4px solid #34c759; background-color: rgba(52, 199, 89, 0.05); margin-top: 8px;">
