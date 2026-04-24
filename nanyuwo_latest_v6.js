@@ -308,36 +308,6 @@ const HTML_UI = `
 <body>
     <div id="toast"></div>
     
-    <div id="homeDashboard" class="card page-section" data-page="home" style="box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin-bottom: 18px;">
-            <h2 style="margin-top:0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    📊 数据大屏 <span style="font-size:14px; font-weight: normal; color: var(--text-sec);">代理主页实时概览</span>
-                </div>
-                <div style="font-size: 13px; background: rgba(0,113,227,0.1); color: var(--primary); padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0,113,227,0.2); display: flex; gap: 15px; flex-wrap: wrap;">
-                    <span> 今天: <strong id="trafficToday">加载中...</strong></span>
-                    <span>1周内: <strong id="traffic7d">加载中...</strong></span>
-                    <span>1月内: <strong id="traffic30d">加载中...</strong></span>
-                </div>
-            </h2>
-            
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top:20px;">
-                <div style="flex: 2; min-width: 300px; border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: rgba(120,120,120,0.03);">
-                    <canvas id="trendChart"></canvas>
-                </div>
-                <div style="flex: 1; min-width: 300px; border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: rgba(120,120,120,0.03); display: flex; justify-content: center; align-items: center;">
-                    <canvas id="locationChart"></canvas>
-                </div>
-            </div>
-            
-            <h3 style="margin-top: 30px; margin-bottom:16px;">🕵️ 最新独立播放记录 <span style="font-size:12px; color:var(--text-sec);">(仅拦截 PlaybackInfo 真实播放)</span></h3>
-            <div class="table-wrapper">
-                <table style="width: 100%;">
-                    <thead><tr><th>访问时间</th><th>目标节点</th><th>真实 IP 地址</th><th>归属地</th><th>客户端/设备标识 (User-Agent)</th></tr></thead>
-                    <tbody id="logTableBody"><tr><td colspan="5" style="text-align:center; padding: 30px;">加载数据中...</td></tr></tbody>
-                </table>
-            </div>
-    </div>
-
     <div class="container">
     <div class="dashboard-shell" id="dashboardShell">
         <aside class="side-panel">
@@ -361,6 +331,33 @@ const HTML_UI = `
                 <div>
                     <div style="font-size:38px; font-weight:800; margin-bottom:4px; font-family: 'Trebuchet MS', 'Avenir Next', sans-serif; letter-spacing: 1px;">难遇我</div>
                     <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 3px;">NanYuWo</div>
+                </div>
+            </div>
+            <div id="homeDashboard" class="card page-section" data-page="home" style="box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin-bottom: 18px;">
+                <h2 style="margin-top:0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        📊 数据大屏 <span style="font-size:14px; font-weight: normal; color: var(--text-sec);">代理主页实时概览</span>
+                    </div>
+                    <div style="font-size: 13px; background: rgba(0,113,227,0.1); color: var(--primary); padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0,113,227,0.2); display: flex; gap: 15px; flex-wrap: wrap;">
+                        <span> 今天: <strong id="trafficToday">加载中...</strong></span>
+                        <span>1周内: <strong id="traffic7d">加载中...</strong></span>
+                        <span>1月内: <strong id="traffic30d">加载中...</strong></span>
+                    </div>
+                </h2>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top:20px;">
+                    <div style="flex: 2; min-width: 300px; border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: rgba(120,120,120,0.03);">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                    <div style="flex: 1; min-width: 300px; border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: rgba(120,120,120,0.03); display: flex; justify-content: center; align-items: center;">
+                        <canvas id="locationChart"></canvas>
+                    </div>
+                </div>
+                <h3 style="margin-top: 30px; margin-bottom:16px;">🕵️ 最新独立播放记录 <span style="font-size:12px; color:var(--text-sec);">(仅拦截 PlaybackInfo 真实播放)</span></h3>
+                <div class="table-wrapper">
+                    <table style="width: 100%;">
+                        <thead><tr><th>访问时间</th><th>目标节点</th><th>真实 IP 地址</th><th>归属地</th><th>客户端/设备标识 (User-Agent)</th></tr></thead>
+                        <tbody id="logTableBody"><tr><td colspan="5" style="text-align:center; padding: 30px;">加载数据中...</td></tr></tbody>
+                    </table>
                 </div>
             </div>
     <div id="updateAlert" class="card page-section" data-page="update" style="display: none; border-left: 4px solid #34c759; background-color: rgba(52, 199, 89, 0.05); margin-top: 20px;">
@@ -387,7 +384,7 @@ const HTML_UI = `
                     <div id="trace-egress" style="font-weight:600; color:#34c759; font-family: monospace; font-size: 15px;">雷达扫描中...</div>
                 </div>
             </div>
-        </div><div class="soft-panel page-section" data-page="ip" style="padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; margin-top: 20px;">
+        </div><div id="placementCard" class="soft-panel page-section" data-page="ip" style="padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; margin-top: 20px;">
             <div style="font-weight: 600; margin-bottom: 12px; font-size: 16px;">⚙️ Worker 调度模式与区域设置</div>
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 
@@ -612,6 +609,10 @@ const HTML_UI = `
                 section.hidden = !isActive;
                 section.classList.toggle('active', isActive);
             });
+            const traceCard = document.getElementById('cf-trace-card');
+            const placementCard = document.getElementById('placementCard');
+            if (traceCard) traceCard.style.display = page === 'ip' ? 'flex' : 'none';
+            if (placementCard) placementCard.style.display = page === 'ip' ? 'block' : 'none';
             if (page === 'home') openDashboard();
 
             document.querySelectorAll('[data-page-nav]').forEach(link => link.classList.remove('active'));
