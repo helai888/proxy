@@ -495,8 +495,8 @@ const HTML_UI = `
         <main class="main-panel">
             <div class="hero-card page-section active" data-page="home">
                 <div>
-                    <div style="font-size:52px; font-weight:700; margin-bottom:4px; font-family: 'Segoe Script', 'Brush Script MT', 'Snell Roundhand', cursive; letter-spacing: 1px; background: linear-gradient(90deg,#6f5cff,#f55bb7); -webkit-background-clip:text; color:transparent;">再晚些心动</div>
-                    <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 1px;">Late Heartbeat</div>
+                    <div style="font-size:52px; font-weight:700; margin-bottom:4px; font-family: 'Segoe Script', 'Brush Script MT', 'Snell Roundhand', cursive; letter-spacing: 1px; background: linear-gradient(90deg,#6f5cff,#f55bb7); -webkit-background-clip:text; color:transparent;">Reverse Proxy</div>
+                    <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 1px;">ReverseProxy</div>
                 </div>
                 <div class="hero-right">
                     <div style="font-size: 14px; color:#2f365b; font-weight:600;"><span class="status-dot"></span>Late Heartbeat</div>
@@ -505,7 +505,7 @@ const HTML_UI = `
             <div id="homeDashboard" class="card page-section" data-page="home" style="box-shadow: 0 10px 28px rgba(64, 72, 134, 0.09); margin-bottom: 14px; background: rgba(255,255,255,0.96);">
                 <h2 style="margin-top:0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size:34px; line-height:1;">📊</span><span style="font-size:40px; line-height:1; font-weight:800; letter-spacing:1px; background: linear-gradient(90deg,#364173,#535f95); -webkit-background-clip:text; color:transparent;">数据大屏</span> <span style="font-size:14px; font-weight: normal; color: var(--text-sec);">反代数据</span>
+                        <span style="font-size:34px; line-height:1;">📊</span><span style="font-size:40px; line-height:1; font-weight:800; letter-spacing:1px; background: linear-gradient(90deg,#364173,#535f95); -webkit-background-clip:text; color:transparent;">反代数据</span> <span style="font-size:14px; font-weight: normal; color: var(--text-sec);">实时数据</span>
                     </div>
                 </h2>
                 <div class="stats-ring-grid">
