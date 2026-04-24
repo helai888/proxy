@@ -166,7 +166,9 @@ const CSS_DASHBOARD_THEME = `
         position: sticky;
         top: 20px;
         align-self: start;
+        min-height: calc(100vh - 40px);
     }
+    .side-nav { display: flex; flex-direction: column; }
     .brand {
         font-size: 30px;
         font-weight: 700;
@@ -229,6 +231,19 @@ const CSS_DASHBOARD_THEME = `
         padding: 10px 14px;
         flex-shrink: 0;
     }
+    .modal-close-btn {
+        border: 1px solid #dfe3fb;
+        background: #fff;
+        color: #626894;
+        border-radius: 10px;
+        font-size: 20px;
+        width: 38px;
+        height: 38px;
+        cursor: pointer;
+        line-height: 1;
+    }
+    .node-actions { display: flex; gap: 10px; align-items:center; flex-wrap: wrap; }
+    .node-action-btn { padding: 10px 14px; font-size: 13px; }
     .page-section { display: none; }
     .page-section.active { display: block; }
     .soft-panel {
@@ -253,9 +268,13 @@ const CSS_DASHBOARD_THEME = `
     #nodeModal .modal-card { max-width: 980px; margin: 10px auto; }
     @media (max-width: 1100px) {
         .dashboard-shell { grid-template-columns: 92px 1fr; gap: 10px; }
-        .side-panel { padding: 12px 10px; top: 12px; }
+        .side-panel { padding: 12px 10px; top: 12px; min-height: calc(100vh - 24px); }
         .side-nav a { padding: 10px 8px; font-size: 12px; text-align: center; }
         .brand { font-size: 22px; text-align: center; }
+    }
+    @media (max-width: 768px) {
+        .node-actions .search-input { width: 100%; order: 1; }
+        .node-actions .node-action-btn { flex: 1 1 calc(33.33% - 8px); min-width: 110px; text-align: center; order: 2; }
     }
 `;
 
@@ -317,6 +336,9 @@ const HTML_UI = `
     <div class="container">
     <div class="dashboard-shell" id="dashboardShell">
         <aside class="side-panel">
+            <div style="display:flex; justify-content:flex-start;">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰ 菜单</button>
+            </div>
             <h2 class="brand">难遇我</h2>
             <nav class="side-nav">
                 <a class="active" href="javascript:void(0)" data-page-nav="home" onclick="switchPage('home', this)">代理主页</a>
@@ -334,7 +356,6 @@ const HTML_UI = `
                     <div style="font-size:38px; font-weight:800; margin-bottom:4px; font-family: 'Trebuchet MS', 'Avenir Next', sans-serif; letter-spacing: 1px;">难遇我</div>
                     <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 3px;">NanYuWo</div>
                 </div>
-                <button class="menu-toggle" onclick="toggleSidebar()">☰ 菜单</button>
             </div>
             <div id="homeDashboard" class="card page-section" data-page="home" style="box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin-bottom: 14px;">
                 <h2 style="margin-top:0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
@@ -387,7 +408,6 @@ const HTML_UI = `
                     <div id="trace-egress" style="font-weight:600; color:#34c759; font-family: monospace; font-size: 15px;">雷达扫描中...</div>
                 </div>
             </div>
-            <button class="menu-toggle" onclick="toggleSidebar()">☰ 菜单</button>
         </div><div id="placementCard" class="soft-panel page-section" data-page="ip" style="padding: 15px 20px; margin-bottom: 16px; margin-top: 0;">
             <div style="font-weight: 600; margin-bottom: 12px; font-size: 16px;">⚙️ Worker 调度模式与区域设置</div>
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
@@ -418,7 +438,6 @@ const HTML_UI = `
             <div class="card page-section" data-page="update" style="border-left: 4px solid #ff3b30;">
     <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
         <h2 style="margin:0; font-size:18px; color: #ff3b30;">🚀 一键覆盖/更新 Worker 核心层代码</h2>
-        <button class="menu-toggle" onclick="toggleSidebar()">☰ 菜单</button>
     </div>
     <div style="font-size: 13px; color: var(--text-sec); margin-bottom: 12px;">⚠️ 警告：提交错误的代码会导致面板瞬间崩溃（500 错误）。请确保代码已在本地测试通过！</div>
     <textarea id="codeArea" rows="6" placeholder="方式一：在此处直接粘贴修改好的最新代码全文..." style="width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 12px; font-family: monospace; resize: vertical; background:var(--card); font-size:12px;"></textarea>
@@ -498,12 +517,12 @@ const HTML_UI = `
             
             <div id="nodeModal">
                 <div class="card modal-card" style="position: relative;">
-                    <button onclick="closeNodeModal()" style="position:absolute; right:18px; top:14px; border:none; background:transparent; color:var(--text-sec); font-size:24px; cursor:pointer;">×</button>
                 <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
                     <h2 style="margin:0; font-size:18px;">部署 / 编辑反代节点</h2>
-                    <div>
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                         <button class="btn-submit" onclick="exportConfig()" style="background:#5856d6; padding: 8px 16px; font-size: 13px;">📦 导出配置</button>
                         <button class="btn-submit" onclick="importConfig()" style="background:#ff9500; padding: 8px 16px; font-size: 13px;">📥 导入配置</button>
+                        <button class="modal-close-btn" onclick="closeNodeModal()" aria-label="关闭弹窗">×</button>
                     </div>
                 </div>
                 
@@ -560,16 +579,13 @@ const HTML_UI = `
             </div>
 
             <div class="card page-section" data-page="nodes">
-                <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
-                    <button class="menu-toggle" onclick="toggleSidebar()">☰ 菜单</button>
-                </div>
                 <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-                    <h2 style="margin:0; font-size:18px;">已反代的媒体库</h2>
-                    <div style="display: flex; gap: 10px; align-items:center; flex-wrap: wrap;">
+                    <h2 style="margin:0; font-size:18px;">🎬媒体库</h2>
+                    <div class="node-actions">
                         <input type="text" id="searchNode" class="search-input" placeholder="🔍 搜索备注或后缀查找..." onkeyup="filterNodesList()">
-                        <button id="btnPurge" class="btn-submit" onclick="purgeCache()" style="padding: 10px 14px; font-size: 13px;">🧹 刷新全站海报</button>
-                        <button class="btn-submit" onclick="pingAllNodes()" style="padding: 10px 14px; font-size: 13px;">⚡ 全局测速</button>
-                        <button class="btn-submit" onclick="openNodeModal()" style="padding: 10px 14px; font-size: 13px;">➕ 添加节点</button>
+                        <button id="btnPurge" class="btn-submit node-action-btn" onclick="purgeCache()">🧹 刷新全站海报</button>
+                        <button class="btn-submit node-action-btn" onclick="pingAllNodes()">⚡ 全局测速</button>
+                        <button class="btn-submit node-action-btn" onclick="openNodeModal()">➕ 添加节点</button>
                     </div>
                 </div>
                 <div style="background: rgba(0, 122, 255, 0.05); padding: 12px 20px; border-radius: 12px; border: 1px dashed var(--primary); margin-bottom: 20px; margin-top: 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
