@@ -152,7 +152,7 @@ const CSS_DASHBOARD_THEME = `
         padding: 20px;
         box-shadow: 0 18px 55px rgba(52, 58, 112, 0.12);
     }
-    .dashboard-shell { display: grid; grid-template-columns: 210px 1fr; gap: 14px; min-height: 88vh; transition: 0.25s ease; align-items: start; }
+    .dashboard-shell { display: grid; grid-template-columns: 1fr; gap: 0; min-height: 88vh; transition: 0.25s ease; align-items: start; }
     .dashboard-shell.sidebar-collapsed { grid-template-columns: 1fr; }
     .dashboard-shell.sidebar-collapsed .side-panel { display: none; }
     .side-panel {
@@ -167,6 +167,7 @@ const CSS_DASHBOARD_THEME = `
         top: 20px;
         align-self: start;
         min-height: calc(100vh - 40px);
+        display: none;
     }
     .side-nav { display: flex; flex-direction: column; }
     .brand {
@@ -324,6 +325,36 @@ const CSS_DASHBOARD_THEME = `
         background: linear-gradient(120deg,#7a63ff,#f05eb9);
         color: #fff; font-style: normal;
     }
+    .quick-menu {
+        position: fixed;
+        top: 118px;
+        right: 28px;
+        z-index: 998;
+        width: 196px;
+        background: rgba(255,255,255,.98);
+        border: 1px solid rgba(190,195,226,.55);
+        border-radius: 14px;
+        box-shadow: 0 16px 36px rgba(74,82,134,.2);
+        padding: 8px;
+        display: none;
+    }
+    .quick-menu.show { display: block; }
+    .quick-menu a, .quick-menu button {
+        width: 100%;
+        border: none;
+        background: transparent;
+        text-align: left;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 16px;
+        color: #2e355b;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .quick-menu a.active, .quick-menu a:hover, .quick-menu button:hover {
+        background: linear-gradient(90deg,#f0ecff,#fceefd);
+        color: #6a52ff;
+    }
     .modal-close-btn {
         border: 1px solid #dfe3fb;
         background: #fff;
@@ -360,11 +391,12 @@ const CSS_DASHBOARD_THEME = `
     #nodeModal { position: fixed; inset: 0; background: rgba(15, 17, 35, 0.45); z-index: 12000; display: none; padding: 18px; overflow-y: auto; }
     #nodeModal .modal-card { max-width: 980px; margin: 10px auto; }
     @media (max-width: 1100px) {
-        .dashboard-shell { grid-template-columns: 92px 1fr; gap: 10px; }
+        .dashboard-shell { grid-template-columns: 1fr; gap: 10px; }
         .side-panel { padding: 12px 10px; top: 12px; min-height: calc(100vh - 24px); }
         .side-nav a { padding: 10px 8px; font-size: 12px; text-align: center; }
         .brand { font-size: 22px; text-align: center; }
         .global-page-menu { right: 12px; top: 62px; transform: scale(.9); transform-origin: top right; }
+        .quick-menu { right: 12px; top: 104px; transform: scale(.94); transform-origin: top right; }
     }
     @media (max-width: 768px) {
         .stats-ring-grid { grid-template-columns: 1fr; }
@@ -429,6 +461,13 @@ const HTML_UI = `
 <body>
     <div id="toast"></div>
     <button class="global-page-menu" onclick="toggleSidebar()" aria-label="菜单"><i>☰</i>难遇我</button>
+    <div id="quickMenu" class="quick-menu">
+        <a href="javascript:void(0)" data-quick-nav="home" onclick="switchPage('home'); toggleSidebar(true);">🏠 代理主页</a>
+        <a href="javascript:void(0)" data-quick-nav="nodes" onclick="switchPage('nodes'); toggleSidebar(true);">🗂️ 代理节点</a>
+        <a href="javascript:void(0)" data-quick-nav="ip" onclick="switchPage('ip'); toggleSidebar(true);">🛡️ 优选IP</a>
+        <a href="javascript:void(0)" data-quick-nav="update" onclick="switchPage('update'); toggleSidebar(true);">🔄 版本更新</a>
+        <button onclick="logout()">↪ 退出</button>
+    </div>
     
     <div class="container">
     <div class="dashboard-shell" id="dashboardShell">
@@ -447,7 +486,7 @@ const HTML_UI = `
         <main class="main-panel">
             <div class="hero-card page-section active" data-page="home">
                 <div>
-                    <div style="font-size:38px; font-weight:800; margin-bottom:4px; font-family: 'Trebuchet MS', 'Avenir Next', sans-serif; letter-spacing: 1px;">Reverse Proxy</div>
+                    <div style="font-size:52px; font-weight:700; margin-bottom:4px; font-family: 'Segoe Script', 'Brush Script MT', 'Snell Roundhand', cursive; letter-spacing: 1px; background: linear-gradient(90deg,#6f5cff,#f55bb7); -webkit-background-clip:text; color:transparent;">Reverse Proxy</div>
                     <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 1px;">ReverseProxy</div>
                 </div>
                 <div class="hero-right">
@@ -757,10 +796,16 @@ const HTML_UI = `
                 const activeNav = document.querySelector(\`[data-page-nav="\${page}"]\`);
                 if (activeNav) activeNav.classList.add('active');
             }
+            document.querySelectorAll('[data-quick-nav]').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('data-quick-nav') === page);
+            });
         }
 
-        function toggleSidebar() {
-            document.getElementById('dashboardShell').classList.toggle('sidebar-collapsed');
+        function toggleSidebar(forceClose = false) {
+            const quick = document.getElementById('quickMenu');
+            if (!quick) return;
+            if (forceClose) quick.classList.remove('show');
+            else quick.classList.toggle('show');
         }
 
         function openNodeModal() {
@@ -1708,6 +1753,13 @@ const HTML_UI = `
             switchPage('home');
             document.getElementById('nodeModal')?.addEventListener('click', (e) => {
                 if (e.target.id === 'nodeModal') closeNodeModal();
+            });
+            document.addEventListener('click', (e) => {
+                const quick = document.getElementById('quickMenu');
+                const btn = document.querySelector('.global-page-menu');
+                if (quick && btn && quick.classList.contains('show')) {
+                    if (!quick.contains(e.target) && !btn.contains(e.target)) quick.classList.remove('show');
+                }
             });
             setTimeout(fetchCfTrace, 500);
         });
