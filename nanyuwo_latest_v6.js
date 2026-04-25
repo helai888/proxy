@@ -83,6 +83,20 @@ const CSS_COMMON = `
     .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,113,227,0.15); }
 
     .node-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; margin-top: 20px; }
+    .node-grid.list-mode { grid-template-columns: 1fr; gap: 14px; }
+    .node-grid.list-mode .emby-card { border-radius: 16px; padding: 16px 18px; }
+    .view-toggle {
+        border: 1px solid #dfe3fb;
+        background: #fff;
+        color: #585f8d;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    .view-toggle:hover { border-color: #c8b6ff; color: #6b58ff; }
     .emby-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 14px; transition: 0.3s; position: relative; }
     .emby-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.06); transform: translateY(-2px); }
     .card-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
@@ -129,6 +143,289 @@ const CSS_COMMON = `
         #dashboardModal .card { margin: 10px auto !important; padding: 16px !important; box-sizing: border-box; }
         #dashboardModal h2 { font-size: 18px; flex-direction: column; align-items: flex-start; }
         #dashboardModal h2 span { font-size: 12px; }
+    }
+`;
+
+const CSS_DASHBOARD_THEME = `
+    body {
+        background: radial-gradient(circle at 95% 8%, rgba(255, 80, 180, 0.32), transparent 26%),
+                    radial-gradient(circle at 10% 85%, rgba(120, 96, 255, 0.18), transparent 30%),
+                    #eff1ff;
+        color: #303759;
+    }
+    body.dark {
+        background: radial-gradient(circle at 95% 8%, rgba(255, 80, 180, 0.25), transparent 26%),
+                    radial-gradient(circle at 10% 85%, rgba(120, 96, 255, 0.18), transparent 30%),
+                    #111425;
+    }
+    .container {
+        max-width: 1500px;
+        background: rgba(247, 248, 255, 0.72);
+        border: 1px solid rgba(255,255,255,0.82);
+        border-radius: 28px;
+        padding: 20px;
+        box-shadow: 0 18px 55px rgba(52, 58, 112, 0.12);
+    }
+    .dashboard-shell { display: grid; grid-template-columns: 1fr; gap: 0; min-height: 88vh; transition: 0.25s ease; align-items: start; }
+    .dashboard-shell.sidebar-collapsed { grid-template-columns: 1fr; }
+    .dashboard-shell.sidebar-collapsed .side-panel { display: none; }
+    .side-panel {
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 24px;
+        padding: 20px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        position: sticky;
+        top: 20px;
+        align-self: start;
+        min-height: calc(100vh - 40px);
+        display: none;
+    }
+    .side-nav { display: flex; flex-direction: column; }
+    .brand {
+        font-size: 30px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #6f5cff, #f55bb7);
+        -webkit-background-clip: text;
+        color: transparent;
+        margin: 0;
+        font-family: "Segoe Script", "Brush Script MT", "Snell Roundhand", cursive;
+        letter-spacing: 1px;
+    }
+    .side-nav a {
+        display: block;
+        text-decoration: none;
+        color: var(--text-sec);
+        font-weight: 600;
+        padding: 12px 14px;
+        border-radius: 12px;
+        margin-bottom: 6px;
+    }
+    .side-nav a.active {
+        color: #fff;
+        background: linear-gradient(90deg, #6b58ff, #f05ab9);
+        box-shadow: 0 8px 18px rgba(107,88,255,.24);
+    }
+    .main-panel {
+        min-width: 0;
+        background: linear-gradient(180deg, rgba(245,247,255,0.9), rgba(240,243,255,0.9));
+        border-radius: 24px;
+        padding: 10px 14px 14px;
+        border: none;
+    }
+    .hero-card {
+        background: rgba(255,255,255,0.88);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 20px;
+        padding: 16px 20px;
+        margin-bottom: 14px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .hero-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #33c86e;
+        display: inline-block;
+        margin-right: 8px;
+        box-shadow: 0 0 0 3px rgba(51,200,110,.18);
+    }
+    .avatar-menu-btn {
+        width: 42px;
+        height: 42px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        background: linear-gradient(120deg, #7a63ff, #f05eb9);
+        color: #fff;
+        font-size: 18px;
+        box-shadow: 0 8px 20px rgba(114, 90, 255, .28);
+    }
+    .stats-ring-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(180px, 1fr));
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+    .stats-ring-item {
+        background: rgba(255,255,255,0.95);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .ring {
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        background: conic-gradient(#7a5dff 0 70%, #e9e8ff 70% 100%);
+        position: relative;
+        flex-shrink: 0;
+    }
+    .ring::after {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border-radius: 50%;
+        background: #fff;
+    }
+    .ring.r2 { background: conic-gradient(#c96ad8 0 68%, #efe9fa 68% 100%); }
+    .ring.r3 { background: conic-gradient(#6d4ce8 0 74%, #ebe8ff 74% 100%); }
+    .dash-main-grid {
+        display: grid;
+        grid-template-columns: 1.55fr 1fr;
+        gap: 14px;
+    }
+    .bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 14px;
+        margin-top: 14px;
+    }
+    .hero-chip {
+        background: #eef0ff;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        color: #5f6385;
+        border: 1px solid #e0e3fa;
+    }
+    .menu-toggle {
+        border: 1px solid #dfe3fb;
+        background: #fff;
+        color: #575d88;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 8px 12px;
+        flex-shrink: 0;
+    }
+    .global-page-menu {
+        position: fixed;
+        top: 74px;
+        right: 28px;
+        z-index: 999;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid #dfe3fb;
+        background: rgba(255,255,255,.95);
+        color: #5d638f;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 700;
+        box-shadow: 0 8px 18px rgba(90, 98, 148, .16);
+        cursor: pointer;
+        user-select: none;
+        touch-action: none;
+    }
+    .global-page-menu i {
+        width: 28px; height: 28px; border-radius: 50%;
+        display: inline-flex; align-items: center; justify-content: center;
+        background: linear-gradient(120deg,#7a63ff,#f05eb9);
+        color: #fff; font-style: normal;
+    }
+    .quick-menu {
+        position: fixed;
+        top: 118px;
+        right: 28px;
+        z-index: 998;
+        width: 210px;
+        background: rgba(255,255,255,.98);
+        border: 1px solid rgba(190,195,226,.55);
+        border-radius: 14px;
+        box-shadow: 0 16px 36px rgba(74,82,134,.2);
+        padding: 8px;
+        display: none;
+    }
+    .quick-menu.show { display: block; }
+    .quick-menu a, .quick-menu button {
+        width: 100%;
+        border: none;
+        background: transparent;
+        text-align: left;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 15px;
+        color: #2e355b;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        text-decoration: none;
+        font-family: "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+        letter-spacing: .2px;
+    }
+    .quick-menu a.active, .quick-menu a:hover, .quick-menu button:hover {
+        background: linear-gradient(90deg,#f0ecff,#fceefd);
+        color: #6a52ff;
+    }
+    .modal-close-btn {
+        border: 1px solid #dfe3fb;
+        background: #fff;
+        color: #626894;
+        border-radius: 10px;
+        font-size: 20px;
+        width: 38px;
+        height: 38px;
+        cursor: pointer;
+        line-height: 1;
+    }
+    .node-actions { display: flex; gap: 10px; align-items:center; flex-wrap: wrap; }
+    .node-action-btn { padding: 10px 14px; font-size: 13px; }
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+    .soft-panel {
+        background: rgba(255,255,255,0.94) !important;
+        border: 1px solid rgba(188, 190, 224, 0.45) !important;
+        box-shadow: 0 8px 30px rgba(67, 74, 131, 0.08);
+        border-radius: 20px;
+    }
+    .card {
+        background: rgba(255,255,255,0.94);
+        border: 1px solid rgba(188, 190, 224, 0.45);
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(67, 74, 131, 0.08);
+    }
+    .btn-submit {
+        background: linear-gradient(90deg, #7057ff, #ef5bb8) !important;
+        box-shadow: 0 7px 20px rgba(113, 87, 255, .25) !important;
+        border-radius: 12px;
+    }
+    .btn-submit:hover { filter: brightness(1.03); transform: translateY(-1px); }
+    #nodeModal { position: fixed; inset: 0; background: rgba(15, 17, 35, 0.45); z-index: 12000; display: none; padding: 18px; overflow-y: auto; }
+    #nodeModal .modal-card { max-width: 980px; margin: 10px auto; }
+    @media (max-width: 1100px) {
+        .dashboard-shell { grid-template-columns: 1fr; gap: 10px; }
+        .side-panel { padding: 12px 10px; top: 12px; min-height: calc(100vh - 24px); }
+        .side-nav a { padding: 10px 8px; font-size: 12px; text-align: center; }
+        .brand { font-size: 22px; text-align: center; }
+        .global-page-menu { right: 12px; top: 62px; transform: scale(.9); transform-origin: top right; }
+        .quick-menu { right: 12px; top: 104px; transform: scale(.94); transform-origin: top right; }
+    }
+    @media (max-width: 768px) {
+        .stats-ring-grid { grid-template-columns: 1fr; }
+        .dash-main-grid, .bottom-grid { grid-template-columns: 1fr; }
+        .node-actions .search-input { width: 100%; order: 1; }
+        .node-actions .node-action-btn { flex: 1 1 calc(33.33% - 8px); min-width: 110px; text-align: center; order: 2; }
     }
 `;
 
@@ -179,50 +476,89 @@ const HTML_UI = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MakkaPakka的反代面板</title>
-    <style>${CSS_COMMON}</style>
+    <title>Reverse Proxy</title>
+    <style>${CSS_COMMON}${CSS_DASHBOARD_THEME}</style>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div id="toast"></div>
-    
-    <div id="dashboardModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10000; overflow-y:auto; padding: 20px; backdrop-filter: blur(5px);">
-        <div class="card" style="max-width: 1000px; margin: 40px auto; position:relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
-            <button onclick="closeDashboard()" style="position:absolute; top:20px; right:20px; font-size:24px; background:none; border:none; cursor:pointer; color: var(--text-sec); transition: 0.2s;" onmouseover="this.style.color='#ff3b30'" onmouseout="this.style.color='var(--text-sec)'">✖</button>
-            
-            <h2 style="margin-top:0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    📊 数据大屏 <span style="font-size:14px; font-weight: normal; color: var(--text-sec);">精确访客画像分析</span>
-                </div>
-                <div style="font-size: 13px; background: rgba(0,113,227,0.1); color: var(--primary); padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0,113,227,0.2); display: flex; gap: 15px; flex-wrap: wrap;">
-                    <span> 今天: <strong id="trafficToday">加载中...</strong></span>
-                    <span>1周内: <strong id="traffic7d">加载中...</strong></span>
-                    <span>1月内: <strong id="traffic30d">加载中...</strong></span>
-                </div>
-            </h2>
-            
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top:20px;">
-                <div style="flex: 2; min-width: 300px; border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: rgba(120,120,120,0.03);">
-                    <canvas id="trendChart"></canvas>
-                </div>
-                <div style="flex: 1; min-width: 300px; border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: rgba(120,120,120,0.03); display: flex; justify-content: center; align-items: center;">
-                    <canvas id="locationChart"></canvas>
-                </div>
-            </div>
-            
-            <h3 style="margin-top: 30px; margin-bottom:16px;">🕵️ 最新独立播放记录 <span style="font-size:12px; color:var(--text-sec);">(仅拦截 PlaybackInfo 真实播放)</span></h3>
-            <div class="table-wrapper">
-                <table style="width: 100%;">
-                    <thead><tr><th>访问时间</th><th>目标节点</th><th>真实 IP 地址</th><th>归属地</th><th>客户端/设备标识 (User-Agent)</th></tr></thead>
-                    <tbody id="logTableBody"><tr><td colspan="5" style="text-align:center; padding: 30px;">加载数据中...</td></tr></tbody>
-                </table>
-            </div>
-        </div>
+    <button class="global-page-menu" onclick="toggleSidebar()" aria-label="菜单"><i>☰</i></button>
+    <div id="quickMenu" class="quick-menu">
+        <a href="javascript:void(0)" data-quick-nav="home" onclick="switchPage('home'); toggleSidebar(true);">代理主页</a>
+        <a href="javascript:void(0)" data-quick-nav="nodes" onclick="switchPage('nodes'); toggleSidebar(true);">代理节点</a>
+        <a href="javascript:void(0)" data-quick-nav="ip" onclick="switchPage('ip'); toggleSidebar(true);">优选IP</a>
+        <a href="javascript:void(0)" data-quick-nav="update" onclick="switchPage('update'); toggleSidebar(true);">版本更新</a>
+        <button onclick="logout()">退出系统</button>
     </div>
-
+    
     <div class="container">
-    <div id="updateAlert" class="card" style="display: none; border-left: 4px solid #34c759; background-color: rgba(52, 199, 89, 0.05); margin-top: 20px;">
+    <div class="dashboard-shell" id="dashboardShell">
+        <aside class="side-panel">
+            <h2 class="brand">Reverse Proxy</h2>
+            <nav class="side-nav">
+                <a class="active" href="javascript:void(0)" data-page-nav="home" onclick="switchPage('home', this)">代理主页</a>
+                <a href="javascript:void(0)" data-page-nav="nodes" onclick="switchPage('nodes', this)">代理节点</a>
+                <a href="javascript:void(0)" data-page-nav="ip" onclick="switchPage('ip', this)">优选IP</a>
+                <a href="javascript:void(0)" data-page-nav="update" onclick="switchPage('update', this)">版本更新</a>
+            </nav>
+            <div style="margin-top:auto; display:flex; flex-direction:column; gap:8px; padding-top:24px;">
+                <button class="btn-submit" onclick="logout()" style="width:100%; padding:10px 12px; font-size:13px;">退出系统</button>
+            </div>
+        </aside>
+        <main class="main-panel">
+            <div class="hero-card page-section active" data-page="home">
+                <div>
+                    <div style="font-size:52px; font-weight:700; margin-bottom:4px; font-family: 'Segoe Script', 'Brush Script MT', 'Snell Roundhand', cursive; letter-spacing: 1px; background: linear-gradient(90deg,#6f5cff,#f55bb7); -webkit-background-clip:text; color:transparent;">Reverse Proxy</div>
+                    <div style="color:var(--text-sec); font-family: 'Times New Roman', Georgia, serif; letter-spacing: 1px;">再晚些心动</div>
+                </div>
+                <div class="hero-right">
+                    <div style="font-size: 14px; color:#2f365b; font-weight:600;"><span class="status-dot"></span>Late Heartbeat</div>
+                </div>
+            </div>
+            <div id="homeDashboard" class="card page-section" data-page="home" style="box-shadow: 0 10px 28px rgba(64, 72, 134, 0.09); margin-bottom: 14px; background: rgba(255,255,255,0.96);">
+                <h2 style="margin-top:0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size:34px; line-height:1;">📊</span><span style="font-size:40px; line-height:1; font-weight:800; letter-spacing:1px; background: linear-gradient(90deg,#364173,#535f95); -webkit-background-clip:text; color:transparent;">反代数据</span>
+                    </div>
+                </h2>
+                <div class="stats-ring-grid">
+                    <div class="stats-ring-item">
+                        <div class="ring"></div>
+                        <div><div style="color:#6f7595;font-size:13px;">今天</div><div id="trafficToday" style="font-size:20px;font-weight:800;color:#232946;">加载中...</div><div style="font-size:12px;color:#8a90ad;">Used</div></div>
+                    </div>
+                    <div class="stats-ring-item">
+                        <div class="ring r2"></div>
+                        <div><div style="color:#6f7595;font-size:13px;">1周内</div><div id="traffic7d" style="font-size:20px;font-weight:800;color:#232946;">加载中...</div><div style="font-size:12px;color:#8a90ad;">Used</div></div>
+                    </div>
+                    <div class="stats-ring-item">
+                        <div class="ring r3"></div>
+                        <div><div style="color:#6f7595;font-size:13px;">1月内</div><div id="traffic30d" style="font-size:20px;font-weight:800;color:#232946;">加载中...</div><div style="font-size:12px;color:#8a90ad;">Used</div></div>
+                    </div>
+                </div>
+                <div class="dash-main-grid" style="margin-top:12px;">
+                    <div style="border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95); min-height: 340px;">
+                        <div style="font-size:18px;font-weight:700;color:#2f365b;margin-bottom:10px;">📈 过去 7 天全站播放并发趋势</div>
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                    <div style="border: 1px solid var(--border); border-radius: 18px; padding: 16px; background: rgba(247,248,255,0.95); display: flex; justify-content: center; align-items: center; min-height: 340px;">
+                        <canvas id="locationChart"></canvas>
+                    </div>
+                </div>
+                <div class="bottom-grid">
+                <div id="top5-simple-container" style="margin-top:0;"></div>
+                <div>
+                <h3 style="margin-top: 0; margin-bottom:12px;">🕵️ 最新独立播放记录 <span style="font-size:12px; color:var(--text-sec);">(仅拦截 PlaybackInfo 真实播放)</span></h3>
+                <div class="table-wrapper" style="border-radius:16px;">
+                    <table style="width: 100%;">
+                        <thead><tr><th>访问时间</th><th>目标节点</th><th>真实 IP 地址</th><th>归属地</th><th>客户端/设备标识 (User-Agent)</th></tr></thead>
+                        <tbody id="logTableBody"><tr><td colspan="5" style="text-align:center; padding: 30px;">加载数据中...</td></tr></tbody>
+                    </table>
+                </div>
+                </div>
+                </div>
+            </div>
+    <div id="updateAlert" class="card page-section" data-page="update" style="display: none; border-left: 4px solid #34c759; background-color: rgba(52, 199, 89, 0.05); margin-top: 8px;">
             <div style="display:flex; justify-content: space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                 <div>
                     <h3 style="margin:0; color: #34c759; font-size: 16px;">✨ 发现新版本！</h3>
@@ -231,7 +567,7 @@ const HTML_UI = `
                 <button onclick="doOnlineUpdate()" id="onlineUpdateBtn" style="background: #34c759; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 12px rgba(52, 199, 89, 0.2);">🚀 一键拉取并升级</button>
             </div>
         </div>
-    <div id="cf-trace-card" style="background: rgba(120,120,120,0.05); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; font-size: 14px; gap: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); margin-top: 20px;">
+            <div id="cf-trace-card" class="soft-panel page-section" data-page="ip" style="padding: 12px 20px; margin-bottom: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; font-size: 14px; gap: 15px;">
             <div style="display: flex; align-items: center; gap: 12px;">
                 <div style="font-size: 24px;">📍</div>
                 <div>
@@ -246,7 +582,7 @@ const HTML_UI = `
                     <div id="trace-egress" style="font-weight:600; color:#34c759; font-family: monospace; font-size: 15px;">雷达扫描中...</div>
                 </div>
             </div>
-        </div><div style="background: rgba(120,120,120,0.05); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; margin-top: 20px;">
+        </div><div id="placementCard" class="soft-panel page-section" data-page="ip" style="padding: 15px 20px; margin-bottom: 16px; margin-top: 0;">
             <div style="font-weight: 600; margin-bottom: 12px; font-size: 16px;">⚙️ Worker 调度模式与区域设置</div>
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 
@@ -266,30 +602,14 @@ const HTML_UI = `
 
                 <input type="text" id="cf-custom-input" placeholder="输入云代码 (如 gcp:us-west1)" style="display: none; flex: 1.5; min-width: 200px; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text);">
                 
-                <button onclick="updatePlacement()" style="background: #007aff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; white-space: nowrap;">
+                <button class="btn-submit" onclick="updatePlacement()" style="padding: 10px 20px; border-radius: 6px; font-weight: bold; white-space: nowrap;">
                     提交修改
                 </button>
             </div>
             <div id="place-status" style="margin-top: 10px; font-size: 13px; color: var(--text-sec); font-weight: 600;">后台全自动安全调度，不暴露任何私钥</div>
         </div>
         <div class="content-wrap">
-            <div class="header" style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap:wrap; gap:16px;">
-                <h1 style="margin: 0; font-size: 26px; display:flex; align-items:center; gap: 10px;">
-                    私有调度与反代核心
-                    <button id="themeToggle" onclick="toggleDarkMode()" style="background:transparent;border:none;font-size:24px;cursor:pointer;padding:0;" title="切换深色模式">🌙</button>
-                </h1>
-                <div style="display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
-                    <div style="font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 10px; background: rgba(120,120,120,0.08); border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);" title="你的设备到云端边缘节点的真实往返延迟">
-                        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#34c759; box-shadow: 0 0 6px #34c759; transition: 0.3s;" id="rttDot"></span>
-                        <span style="color: var(--text-sec);">RTT: </span><span id="rttValue" style="font-family: monospace; font-size: 14px; width: 45px; text-align: right;">测算中</span>
-                    </div>
-                    
-                    <button class="btn-submit" onclick="openDashboard()" style="background: #34c759; box-shadow: 0 4px 12px rgba(52, 199, 89, 0.2);">📊 数据大屏</button>
-                    <button class="logout-btn" style="background: #ff3b30; color: white; border: none; border-radius: 10px; font-weight: 600; padding: 10px 16px; cursor: pointer;" onclick="logout()">退出系统</button>
-                </div>
-            </div>
-
-            <div class="card" style="border-left: 4px solid #ff3b30;">
+            <div class="card page-section" data-page="update" style="border-left: 4px solid #ff3b30;">
     <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
         <h2 style="margin:0; font-size:18px; color: #ff3b30;">🚀 一键覆盖/更新 Worker 核心层代码</h2>
     </div>
@@ -301,7 +621,7 @@ const HTML_UI = `
         <button class="btn-submit" id="deployBtn" onclick="deployWorker()" style="background: #ff3b30; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2); margin-left: auto;">🔥 立即覆盖部署并重启节点</button>
     </div>
 </div>
-            <div class="card">
+            <div class="card page-section" data-page="ip">
                 <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
                     <h2 style="margin:0; font-size:18px;">⚡ 专属线路测速与动态 DNS 解析</h2>
                 </div>
@@ -369,12 +689,14 @@ const HTML_UI = `
                 </div>
             </div>
             
-            <div class="card">
+            <div id="nodeModal">
+                <div class="card modal-card" style="position: relative;">
                 <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
                     <h2 style="margin:0; font-size:18px;">部署 / 编辑反代节点</h2>
-                    <div>
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                         <button class="btn-submit" onclick="exportConfig()" style="background:#5856d6; padding: 8px 16px; font-size: 13px;">📦 导出配置</button>
                         <button class="btn-submit" onclick="importConfig()" style="background:#ff9500; padding: 8px 16px; font-size: 13px;">📥 导入配置</button>
+                        <button class="modal-close-btn" onclick="closeNodeModal()" aria-label="关闭弹窗">×</button>
                     </div>
                 </div>
                 
@@ -427,15 +749,18 @@ const HTML_UI = `
                         </div>
                     </div>
                 </form>
+                </div>
             </div>
 
-            <div class="card">
+            <div class="card page-section" data-page="nodes">
                 <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-                    <h2 style="margin:0; font-size:18px;">已反代的媒体库</h2>
-                    <div style="display: flex; gap: 10px; align-items:center; flex-wrap: wrap;">
-                        <button class="btn-submit" onclick="pingAllNodes()" style="background:#32ade6; padding: 10px 14px; font-size: 13px;">⚡ 全局测速</button>
-                        <button id="btnPurge" class="btn-submit" onclick="purgeCache()" style="background:#ff2d55; padding: 10px 14px; font-size: 13px;">🧹 刷新全站海报</button>
+                    <h2 style="margin:0; font-size:18px;">🎬媒体库</h2>
+                    <div class="node-actions">
+                        <button id="nodeViewBtn" class="view-toggle" onclick="toggleNodeViewMode()">📃 长条模式</button>
                         <input type="text" id="searchNode" class="search-input" placeholder="🔍 搜索备注或后缀查找..." onkeyup="filterNodesList()">
+                        <button id="btnPurge" class="btn-submit node-action-btn" onclick="purgeCache()">🧹 刷新全站海报</button>
+                        <button class="btn-submit node-action-btn" onclick="pingAllNodes()">⚡ 全局测速</button>
+                        <button class="btn-submit node-action-btn" onclick="openNodeModal()">➕ 添加节点</button>
                     </div>
                 </div>
                 <div style="background: rgba(0, 122, 255, 0.05); padding: 12px 20px; border-radius: 12px; border: 1px dashed var(--primary); margin-bottom: 20px; margin-top: 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
@@ -448,7 +773,7 @@ const HTML_UI = `
                 <option value="">🔄 读取模式中...</option>
             </select>
 
-            <button onclick="batchUpdateModes()" style="background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,113,227,0.2);">
+            <button class="btn-submit" onclick="batchUpdateModes()" style="padding: 8px 16px; border-radius: 8px; font-weight: bold; transition: 0.2s;">
                 🚀 批量应用模式
             </button>
 
@@ -461,15 +786,8 @@ const HTML_UI = `
             
         </div>
         
-        <div style="text-align: center; padding-top: 10px; padding-bottom: 20px;">
-            <a href="https://t.me/MakkaPakkaOvO" target="_blank" style="text-decoration: none; color: var(--text); font-weight: 600; display: inline-flex; align-items: center; padding: 12px 24px; background: var(--card); border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: 0.3s; font-size: 14px; border: 1px solid var(--border);">
-                ${SVG_TG}
-                联系作者 MakkaPakkaOvO
-            </a>
-            <div style="margin-top: 20px; font-size: 12px; color: var(--text-sec); line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto; padding: 0 15px;">
-                <strong>免责声明:</strong> 本项目仅供学习与技术测试使用，请遵守当地法律法规。使用者对配置、转发内容与访问行为承担全部责任，开发者不对任何直接或间接损失负责。
-            </div>
-        </div>
+        </main>
+    </div>
     </div>
 
     <script>
@@ -481,6 +799,78 @@ const HTML_UI = `
         let sortableInstance = null;
         let trendChartInstance = null;
         let locationChartInstance = null;
+        let currentPage = 'home';
+        let nodeViewMode = localStorage.getItem('node_view_mode') || 'card';
+
+        function applyNodeViewMode() {
+            const grid = document.getElementById('list-grid');
+            const btn = document.getElementById('nodeViewBtn');
+            if (grid) grid.classList.toggle('list-mode', nodeViewMode === 'list');
+            if (btn) btn.textContent = nodeViewMode === 'list' ? '🔲 卡片模式' : '📃 长条模式';
+        }
+
+        function toggleNodeViewMode() {
+            nodeViewMode = nodeViewMode === 'list' ? 'card' : 'list';
+            localStorage.setItem('node_view_mode', nodeViewMode);
+            applyNodeViewMode();
+        }
+
+        function switchPage(page, navEl = null) {
+            currentPage = page;
+            document.querySelectorAll('.page-section').forEach(section => {
+                const isActive = section.dataset.page === page;
+                section.hidden = !isActive;
+                section.classList.toggle('active', isActive);
+            });
+            const traceCard = document.getElementById('cf-trace-card');
+            const placementCard = document.getElementById('placementCard');
+            if (traceCard) traceCard.style.display = page === 'ip' ? 'flex' : 'none';
+            if (placementCard) placementCard.style.display = page === 'ip' ? 'block' : 'none';
+            if (page === 'home') openDashboard();
+
+            document.querySelectorAll('[data-page-nav]').forEach(link => link.classList.remove('active'));
+            if (navEl) navEl.classList.add('active');
+            else {
+                const activeNav = document.querySelector(\`[data-page-nav="\${page}"]\`);
+                if (activeNav) activeNav.classList.add('active');
+            }
+            document.querySelectorAll('[data-quick-nav]').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('data-quick-nav') === page);
+            });
+        }
+
+        function toggleSidebar(forceClose = false) {
+            const quick = document.getElementById('quickMenu');
+            const btn = document.querySelector('.global-page-menu');
+            if (!quick) return;
+            if (forceClose) quick.classList.remove('show');
+            else quick.classList.toggle('show');
+            if (quick.classList.contains('show') && btn) positionQuickMenu(btn, quick);
+        }
+
+        function positionQuickMenu(btn, quick) {
+            const btnRect = btn.getBoundingClientRect();
+            const menuWidth = quick.offsetWidth || 210;
+            const menuHeight = quick.offsetHeight || 260;
+            const pad = 10;
+            let left = btnRect.right - menuWidth;
+            let top = btnRect.bottom + 10;
+            if (left < pad) left = pad;
+            if (left + menuWidth > window.innerWidth - pad) left = window.innerWidth - menuWidth - pad;
+            if (top + menuHeight > window.innerHeight - pad) top = btnRect.top - menuHeight - 10;
+            if (top < pad) top = pad;
+            quick.style.left = left + 'px';
+            quick.style.top = top + 'px';
+            quick.style.right = 'auto';
+        }
+
+        function openNodeModal() {
+            document.getElementById('nodeModal').style.display = 'block';
+        }
+
+        function closeNodeModal() {
+            document.getElementById('nodeModal').style.display = 'none';
+        }
 
         // 设置 Chart.js 响应暗色模式
         function updateChartColors() {
@@ -492,8 +882,6 @@ const HTML_UI = `
         // 数据大屏与统计逻辑 (适配手机端表格排版)
         // =====================================
         async function openDashboard() {
-            document.getElementById('dashboardModal').style.display = 'block';
-            
             function parseTrafficToBytes(str) {
                 if (!str || str === '0 B' || str.includes('异常') || str.includes('获取')) return 0;
                 let val = parseFloat(str);
@@ -514,7 +902,7 @@ const HTML_UI = `
                 }
             }
             
-            let top5Html = '<h3 style="margin-top: 30px; margin-bottom:16px;">🏆 今日节点流量消耗 TOP 5</h3><div style="background: rgba(120,120,120,0.05); padding: 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px;">';
+            let top5Html = '<h3 style="margin-top:0; margin-bottom:12px; color:#202749;">🏆 今日节点流量消耗 TOP 5</h3><div style="background: linear-gradient(180deg, rgba(245,255,247,.95), rgba(240,250,245,.95)); padding: 16px; border-radius: 14px; border: 1px solid #cbeed6; margin-bottom: 0;">';
             
             // ==========================================
             // 🚀 核心优化：听你的天才思路！直接去网页现有的卡片里“抓取”数据，绝不等待变量！
@@ -550,10 +938,10 @@ const HTML_UI = `
                 const top5 = validNodes.sort((a, b) => parseTrafficToBytes(b.todayBandwidth) - parseTrafficToBytes(a.todayBandwidth)).slice(0, 5);
                 
                 if (top5.length > 0) {
-                    top5Html += '<ul style="margin:0; padding-left: 20px; line-height: 2; font-size: 14px; color: var(--text);">';
+                    top5Html += '<ul style="margin:0; padding-left: 0; line-height: 1.9; font-size: 14px; color: var(--text); list-style:none;">';
                     top5.forEach((r, idx) => {
                         const rankColor = idx === 0 ? '#ff3b30' : (idx === 1 ? '#ff9500' : (idx === 2 ? '#ffcc00' : 'var(--text-sec)'));
-                        top5Html += \`<li><strong style="color:\${rankColor}; font-size: 15px;">#\${idx+1}</strong> \${r.remark} (/\${r.prefix}) —— 消耗: <strong style="color:var(--primary); font-family: monospace;">\${r.todayBandwidth}</strong></li>\`;
+                        top5Html += \`<li style="display:flex; align-items:center; justify-content:space-between; gap:10px; border-bottom:1px dashed #b7e5c6; padding:4px 0;"><span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:\${rankColor};margin-right:7px;"></span><strong style="color:\${rankColor}; font-size: 15px;">#\${idx+1}</strong> \${r.remark}</span><strong style="color:#1d8a43; font-family: monospace;">\${r.todayBandwidth}</strong></li>\`;
                     });
                     top5Html += '</ul>';
                 } else {
@@ -643,7 +1031,7 @@ const HTML_UI = `
             }
         }
 
-        function closeDashboard() { document.getElementById('dashboardModal').style.display = 'none'; }
+        function closeDashboard() { /* 主页内嵌数据大屏，不再使用弹窗 */ }
 
         async function loadIcons(forceUrl = null) {
             const grid = document.getElementById('iconGrid');
@@ -730,11 +1118,16 @@ const HTML_UI = `
 
         function toggleDarkMode() {
             const isDark = document.body.classList.toggle('dark');
-            document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.textContent = isDark ? '☀️' : '🌙';
             localStorage.setItem('emby_proxy_dark', isDark ? '1' : '0');
             if(trendChartInstance) { updateChartColors(); trendChartInstance.update(); locationChartInstance.update(); }
         }
-        if (localStorage.getItem('emby_proxy_dark') === '1') { document.body.classList.add('dark'); document.getElementById('themeToggle').textContent = '☀️'; }
+        if (localStorage.getItem('emby_proxy_dark') === '1') {
+            document.body.classList.add('dark');
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.textContent = '☀️';
+        }
 
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -964,6 +1357,7 @@ const HTML_UI = `
                 });
                 
                 filterNodesList();
+                applyNodeViewMode();
 
                 if (sortableInstance) sortableInstance.destroy();
                 sortableInstance = Sortable.create(container, {
@@ -1024,7 +1418,7 @@ const HTML_UI = `
             container.appendChild(emptyInp);
             
             handleTargetInputs(); 
-            window.scrollTo({ top: document.getElementById('addForm').offsetTop - 100, behavior: 'smooth' });
+            openNodeModal();
         }
 
         document.getElementById('addForm').onsubmit = async (e) => {
@@ -1062,6 +1456,7 @@ const HTML_UI = `
                 resetTargetInputs(); 
                 
                 showToast('✅ 节点部署成功');
+                closeNodeModal();
                 load();
             } catch(err) {
                 showToast('❌ 保存失败: ' + err.message);
@@ -1353,6 +1748,7 @@ const HTML_UI = `
                 const rtt = Math.round(performance.now() - start);
                 const rttEl = document.getElementById('rttValue');
                 const dotEl = document.getElementById('rttDot');
+                if (!rttEl || !dotEl) return;
                 
                 rttEl.textContent = rtt + ' ms';
                 
@@ -1368,8 +1764,10 @@ const HTML_UI = `
                     rttEl.style.color = '#ff3b30';
                 }
             } catch (e) {
-                document.getElementById('rttValue').textContent = '断连';
-                document.getElementById('rttDot').style.background = '#ff3b30';
+                const rttEl = document.getElementById('rttValue');
+                const dotEl = document.getElementById('rttDot');
+                if (rttEl) rttEl.textContent = '断连';
+                if (dotEl) dotEl.style.background = '#ff3b30';
             }
         }
         
@@ -1409,6 +1807,68 @@ const HTML_UI = `
         
         // 当网页加载完成时，延迟0.5秒执行探针扫描（避免卡顿主页渲染）
         window.addEventListener('DOMContentLoaded', () => {
+            switchPage('home');
+            applyNodeViewMode();
+            const floatBtn = document.querySelector('.global-page-menu');
+            const quick = document.getElementById('quickMenu');
+            let dragState = null;
+
+            if (floatBtn) {
+                floatBtn.addEventListener('pointerdown', (e) => {
+                    const rect = floatBtn.getBoundingClientRect();
+                    dragState = {
+                        id: e.pointerId,
+                        startX: e.clientX,
+                        startY: e.clientY,
+                        left: rect.left,
+                        top: rect.top,
+                        moved: false
+                    };
+                    floatBtn.setPointerCapture(e.pointerId);
+                });
+
+                floatBtn.addEventListener('pointermove', (e) => {
+                    if (!dragState || e.pointerId !== dragState.id) return;
+                    const dx = e.clientX - dragState.startX;
+                    const dy = e.clientY - dragState.startY;
+                    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragState.moved = true;
+                    let left = dragState.left + dx;
+                    let top = dragState.top + dy;
+                    const rect = floatBtn.getBoundingClientRect();
+                    const maxLeft = window.innerWidth - rect.width - 8;
+                    const maxTop = window.innerHeight - rect.height - 8;
+                    left = Math.max(8, Math.min(maxLeft, left));
+                    top = Math.max(8, Math.min(maxTop, top));
+                    floatBtn.style.left = left + 'px';
+                    floatBtn.style.top = top + 'px';
+                    floatBtn.style.right = 'auto';
+                    if (quick && quick.classList.contains('show')) positionQuickMenu(floatBtn, quick);
+                });
+
+                const endDrag = (e) => {
+                    if (!dragState || e.pointerId !== dragState.id) return;
+                    if (dragState.moved) e.preventDefault();
+                    dragState = null;
+                };
+                floatBtn.addEventListener('pointerup', endDrag);
+                floatBtn.addEventListener('pointercancel', endDrag);
+            }
+
+            document.getElementById('nodeModal')?.addEventListener('click', (e) => {
+                if (e.target.id === 'nodeModal') closeNodeModal();
+            });
+            document.addEventListener('click', (e) => {
+                const quick = document.getElementById('quickMenu');
+                const btn = document.querySelector('.global-page-menu');
+                if (quick && btn && quick.classList.contains('show')) {
+                    if (!quick.contains(e.target) && !btn.contains(e.target)) quick.classList.remove('show');
+                }
+            });
+            window.addEventListener('resize', () => {
+                const quick = document.getElementById('quickMenu');
+                const btn = document.querySelector('.global-page-menu');
+                if (quick && btn && quick.classList.contains('show')) positionQuickMenu(btn, quick);
+            });
             setTimeout(fetchCfTrace, 500);
         });
     // 🚀 新增：全云厂商节点数据库 (包含 Cloudflare 支持的所有主要区域)
